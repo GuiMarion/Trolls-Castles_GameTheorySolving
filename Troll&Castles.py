@@ -207,7 +207,12 @@ def Solve(x,y,t):
     return LinProg(states)
 
 
+if __name__ == "__main__":
+    if len(sys.argv) == 4:
+        print(Solve(int(sys.argv[1]),int(sys.argv[2]),int(sys.argv[3])))
+    else:
+        print("Usage: Python3 Troll&Castles <x y t>")
 
 
-print(Solve(5,4,-1))
+#print(Solve(5,4,-1))
 
