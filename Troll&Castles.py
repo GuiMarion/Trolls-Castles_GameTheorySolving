@@ -45,7 +45,7 @@ def LinProg(Tab):
 
     # Variables
     variables = []
-    for i in range(len(Tab[0])):
+    for i in range(len(Tab)):
         variables.append(LpVariable("p"+str(i), 0, 1))
     weights = Tab
 
@@ -54,17 +54,18 @@ def LinProg(Tab):
 
     (Min,Max) = minMax(weights)
     t = LpVariable("t",Min,Max)
+    
     # Objective
     prob += t
 
     # Constraints
-    for column in range(len(weights)):
+    for column in range(len(weights[0])):
         utility = 0
-        for row in range(len(weights[0])):
-            utility += variables[row]*weights[column][row]
+        for row in range(len(weights)):
+            utility += variables[row]*weights[row][column]
+        #print("UTILITY : ",utility)
         prob += utility - t >= 0
-    # prob += -p1 - t >= 0
-    # prob += p1-p2 - t >= 0
+
     probabilities = 0
     for variable in variables:
         probabilities += variable
@@ -100,7 +101,7 @@ def G(x,y,t):
 
     # First the initialization cases
     if t == 0 and x == y:
-        return 1
+        return 0
     elif t <= -(SIZE-1)/2:
         return -1
     elif t >= (SIZE-1)/2:
@@ -179,11 +180,28 @@ def Solve(x,y,t):
     # We enumerate all the reachable states
     states = enumStatesfrom(x,y,t)
 
+    Print(states)
+
+
+    #If there is only one issue for the player 1, the profits will be the argmin of all the issues from the player 2
+    if x == 1: 
+        x,y,t = states[0][0]
+        mini = G(x,y,t)
+        for state in states[0]:
+            x,y,t = state
+            profits = G(x,y,t)
+            if  profits < mini:
+                mini = profits
+        return ([1.0],mini)
+
+
     # We replce all the states by their utility
     for row in states:
         for i in range(len(row)):
             (x,y,t) = row[i]
             row[i] = G(x,y,t)
+
+    Print(states)
 
 
     return LinProg(states)
@@ -191,5 +209,5 @@ def Solve(x,y,t):
 
 
 
-print(Solve(5,5,0))
+print(Solve(5,4,-1))
 
