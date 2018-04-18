@@ -3,6 +3,10 @@
 
 from pulp import *
 
+# We define the distance between the two castles.
+global SIZE
+SIZE = 5
+
 def minMax(Tab):
     Min = Tab[0][0]
     Max = Tab[0][0]
@@ -13,6 +17,13 @@ def minMax(Tab):
             elif elem < Min:
                 Min = elem 
     return (Min,Max)
+
+def Print(Tab):
+    for row in Tab:
+        print()
+        for elem in row:
+            print(elem, end=" ")
+    print()
 
 def enumStatesfrom(n1,n2,t):
     Liste = []
@@ -86,10 +97,14 @@ def len1(x):
 
 
 def G(x,y,t):
-    
+
     # First the initialization cases
     if t == 0 and x == y:
         return 1
+    elif t <= -(SIZE-1)/2:
+        return -1
+    elif t >= (SIZE-1)/2:
+        return 1    
     elif x == 0: 
         if t < 0: 
             return -1
@@ -157,10 +172,7 @@ def G(x,y,t):
         #         if  profits < mini:
         #             mini = profits
         #     return mini
-        
-        
-        
-        raise NotImplementedError("Missing cases on the reccurence")
+
 
 def Solve(x,y,t):
 
@@ -173,10 +185,11 @@ def Solve(x,y,t):
             (x,y,t) = row[i]
             row[i] = G(x,y,t)
 
+
     return LinProg(states)
 
 
 
 
-print(Solve(5,4,-1))
+print(Solve(5,5,0))
 
