@@ -16,6 +16,9 @@ SIZE = 5
 global SEEN
 SEEN = {}
 
+global DEBUG
+DEBUG = False
+
 def minMax(Tab):
 	Min = Tab[0][0]
 	Max = Tab[0][0]
@@ -80,7 +83,11 @@ def LinProg(Tab):
 		probabilities += variable
 	prob += probabilities == 1
 
-	GLPK().solve(prob)
+	if DEBUG:
+		GLPK().solve(prob)
+	else:
+		# don't produce any output, just solve the problem
+		prob.solve(GLPK_CMD(msg=False))
 
 	P = []
 	# Solution
@@ -227,5 +234,5 @@ if __name__ == "__main__":
 		print("Usage: Python3 Troll&Castles <x y t>")
 
 
-#print(Solve(5,4,-1))
+print(Solve(5,4,-1))
 
