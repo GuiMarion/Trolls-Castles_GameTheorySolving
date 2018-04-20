@@ -5,6 +5,7 @@ def rem(Tab, k):
 			return Tab
 
 def Strategy(Tab):
+	DEBUG = True
 	L1 = list(range(len(Tab)))
 
 	strategy = 0
@@ -17,29 +18,32 @@ def Strategy(Tab):
 				indice += 1
 				value = 0
 
-			while value <len(Tab[0]):
+			if indice == len(Tab):
+				return L1
 
+			while value <len(Tab[0]):
 				if Tab[strategy][value] > Tab[indice][value]:
 					# Strategy is NOT dominated by indice
 					indice += 1
-					value = 0
+					value = len(Tab[0]) +1
 					break
 				value += 1
 
+			if value != len(Tab[0]) +1:
 			# Strategy is dominated by indice
-			print(strategy, "<", indice)
-			L1 = rem(L1, strategy)
-			strategy += 1
-			indice += 1
-			break
+				if DEBUG:
+					print(strategy, "<", indice)
+				L1 = rem(L1, strategy)
+				#indice = 0
+				break
 
 		strategy += 1
 
 	return L1
 
 
-print(Strategy([[1, 2, 1, 4],
-				[2, 1, 1, 2],
-				[2, 4, 1, 5],
-				[1, 2, 1, 3],
-				[-1, -1, 0, 3]]))
+print(Strategy([[10],
+				[2],
+				[2],
+				[4],
+				[4]]))

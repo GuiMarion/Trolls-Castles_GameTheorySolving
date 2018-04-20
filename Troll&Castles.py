@@ -2,7 +2,7 @@
 # coding: utf-8
 from pulp import *
 import time
-import numpy
+import numpy as np
 
 # TIME : 1.74 seconds for (10,10,0)
 # TODO : Properly eliminate dominated stategies
@@ -19,6 +19,56 @@ SEEN = {}
 
 global DEBUG
 DEBUG = False
+
+def rem(Tab, k):
+	for i in range(len(Tab)):
+		if Tab[i] == k :
+			del Tab[i]
+			return Tab
+
+def getNotDominatedStategies(Tab):
+	DEBUG = False
+	L1 = list(range(len(Tab)))
+
+	strategy = 0
+	while strategy < len(Tab):
+		indice = 0
+		while indice <len(Tab):
+			value = 0
+			same = True
+
+			if indice == strategy:
+				indice += 1
+				value = 0
+
+			if indice == len(Tab):
+				return L1
+
+			while value <len(Tab[0]):
+				if Tab[strategy][value] > Tab[indice][value]:
+					# Strategy is NOT dominated by indice
+					indice += 1
+					value = len(Tab[0]) +1
+					break
+
+				elif Tab[strategy][value] != Tab[indice][value] : 
+					same = False
+						
+				value += 1
+
+			if value != len(Tab[0]) +1 and not same:
+			# Strategy is dominated by indice
+				if DEBUG:
+					print(strategy, "<", indice)
+				L1 = rem(L1, strategy)
+				#indice = 0
+				break
+			if same:
+				break
+
+		strategy += 1
+
+	return L1
 
 def minMax(Tab):
 	Min = Tab[0][0]
@@ -215,52 +265,36 @@ def Solve(x,y,t):
 				mini = profits
 		return ([1.0],mini)
 
-
 	# We replce all the states by their utility
 	for row in states:
 		for i in range(len(row)):
 			(x,y,t) = row[i]
 			row[i] = G(x,y,t)
 
+#	L1 = getNotDominatedStategies(states)
+#
+#	for i in range(len(states)-1, -1, -1):
+#		if i not in L1:
+#			del states[i]
+
+
 	return LinProg(states)
 
-def getDominatedStategies(Tab):
-	# D contains boolean, 0 if the strategy is dominated, 1 if it's not
-	D = []
-	# Initialization
-	for i in range(len(Tab)):
-		D.append(0)
-
-	for k in range(len(Tab)):
-		for i in range(len(Tab[0])):
-			for e in range(len(Tab)):
-				temp = 1
-				if Tab[k][i] > Tab[e][i]:
-				
-					D[k] = 1
-
-	Print(Tab)
-	Print([D])
-
-	return D
-
-
-#getDominatedStategies([[0,0,0],[1,1,1], [2,2,2]])
-
-print(Solve(5,4,-1))
+#print(Solve(5,4,-1))
 
 
 if __name__ == "__main__":
 	if len(sys.argv) == 4:
 		start_time = time.time()
 		(p,g) = Solve(int(sys.argv[1]),int(sys.argv[2]),int(sys.argv[3]))
-		print("\n \n \n ")
 		print("--- %s seconds ---" % (time.time() - start_time))
 
-		print("Distribution:",p)
+		p = np.array(p)
+		p /= p.sum()
+		print("Distribution:",list(p))
 		print("Utility: ",g)
-		X = numpy.random.choice(range(len(p)), 1, p = p)
-		print("You should shot", X[0]+1, "rocks.")
+		X = np.random.choice(range(len(p)), 1, p = p)
+		print("You should shoot", X[0]+1, "rocks.")
 
 	else:
 		print("Usage: Python3 Troll&Castles <x y t>")
