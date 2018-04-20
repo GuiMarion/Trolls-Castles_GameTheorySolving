@@ -1,5 +1,6 @@
 from pulp import *
 
+debug = False
 
 def minMax(Tab):
     Min = Tab[0][0]
@@ -41,7 +42,11 @@ def LinProg(Tab):
         probabilities += variable
     prob += probabilities == 1
 
-    GLPK().solve(prob)
+    if debug:
+        GLPK().solve(prob)
+    else:
+        # don't produce any output, just solve the problem
+        prob.solve(GLPK_CMD(msg=False))
 
     P = []
     # Solution
