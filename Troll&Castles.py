@@ -271,6 +271,7 @@ def Solve(x,y,t):
 			(x,y,t) = row[i]
 			row[i] = G(x,y,t)
 
+	# We delete all the dominated stategies
 #	L1 = getNotDominatedStategies(states)
 #
 #	for i in range(len(states)-1, -1, -1):
