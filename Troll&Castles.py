@@ -1,180 +1,161 @@
-
 # coding: utf-8
 from pulp import *
 import time
 import numpy as np
+import logging
+
 
 # TIME : 1.74 seconds for (10,10,0)
-# TODO : Properly eliminate dominated stategies
+# TODO : Properly eliminate dominated strategies
 #         Try to implement a dynamic programming method in order to improve speed
 
 
 # We define the distance between the two castles.
-global SIZE
 SIZE = 5
 
-#This object contains all the states already computed in order to not compute them several times
-global SEEN
+# This object contains all the states already computed in order not to compute them several times
 SEEN = {}
 
-global DEBUG
 DEBUG = False
 
-def rem(Tab, k):
-	for i in range(len(Tab)):
-		if Tab[i] == k :
-			del Tab[i]
-			return Tab
+# set up logger
+logger = logging.getLogger('root')
+FORMAT = "[%(filename)s:%(lineno)s - %(funcName)20s() ] %(message)s"
+logging.basicConfig(format=FORMAT)
+# SHORTER_FORMAT = "[%(filename)s:%(lineno)s ] %(message)s"
+# logging.basicConfig(format=SHORTER_FORMAT)
+if DEBUG:
+	logger.setLevel(logging.DEBUG)
 
-def getNotDominatedStategies(Tab):
-	DEBUG = False
-	L1 = list(range(len(Tab)))
 
-	strategy = 0
-	while strategy < len(Tab):
-		indice = 0
-		while indice <len(Tab):
-			value = 0
+def rem(tab, k):
+	for i in range(len(tab)):
+		if tab[i] == k:
+			del tab[i]
+			return tab
+
+
+def get_not_dominated_strategies(tab):
+	result_list = list(range(len(tab)))
+
+	strategy_index = 0
+	while strategy_index < len(tab):
+		other_strategy_index = 0
+		while other_strategy_index < len(tab):
+			enemy_strategy_index = 0
 			same = True
 
-			if indice == strategy:
-				indice += 1
-				value = 0
+			if other_strategy_index == strategy_index:
+				other_strategy_index += 1
+				enemy_strategy_index = 0
 
-			if indice == len(Tab):
-				return L1
+			if other_strategy_index == len(tab):
+				return result_list
 
-			while value <len(Tab[0]):
-				if Tab[strategy][value] > Tab[indice][value]:
-					# Strategy is NOT dominated by indice
-					indice += 1
-					value = len(Tab[0]) +1
+			while enemy_strategy_index < len(tab[0]):
+				if tab[strategy_index][enemy_strategy_index] > tab[other_strategy_index][enemy_strategy_index]:
+					# Strategy is NOT dominated by other_strategy_index
+					other_strategy_index += 1
+					enemy_strategy_index = len(tab[0]) + 1
 					break
 
-				elif Tab[strategy][value] != Tab[indice][value] : 
+				elif tab[strategy_index][enemy_strategy_index] != tab[other_strategy_index][enemy_strategy_index]:
 					same = False
-						
-				value += 1
 
-			if value != len(Tab[0]) +1 and not same:
-			# Strategy is dominated by indice
-				if DEBUG:
-					print(strategy, "<", indice)
-				L1 = rem(L1, strategy)
-				#indice = 0
+				enemy_strategy_index += 1
+
+			if enemy_strategy_index != len(tab[0]) + 1 and not same:
+				# Strategy is dominated by other_strategy_index
+				logger.debug("%s < %s", strategy_index, other_strategy_index)
+				logger.debug("\n%s", np.array(tab))
+				result_list = rem(result_list, strategy_index)
+				# other_strategy_index = 0
 				break
 			if same:
 				break
 
-		strategy += 1
+		strategy_index += 1
 
-	return L1
+	return result_list
 
-def minMax(Tab):
-	Min = Tab[0][0]
-	Max = Tab[0][0]
-	for liste in Tab:
-		for elem in liste:
-			if elem >Max :
-				Max = elem
-			elif elem < Min:
-				Min = elem 
-	return (Min,Max)
 
-def Print(Tab):
-	for row in Tab:
-		print()
-		for elem in row:
-			print(elem, end=" ")
-	print()
+def find_min_and_max(tab):
+	matrix = np.array(tab)
+	return matrix.min(), matrix.max()
 
-def enumStatesfrom(n1,n2,t):
-	Liste = []
-	for x in range(1, n1+1):
-		L = []
-		for y in range(1, n2+1):
-			if x == y :
-				L.append((n1-x, n2-y, t))
-			elif x > y :
-				L.append((n1-x, n2-y, t+1))
-			elif x < y :
-				L.append((n1-x, n2-y, t-1))
-			else :
-				raise ValueError("Impossible case")
-		Liste.append(L)
-	return Liste
 
-def LinProg(Tab):
+def enum_states_from(n1, n2, t):
+	result_states = []
+	for x in range(1, n1 + 1):
+		states_for_strategy = []
+		for y in range(1, n2 + 1):
+			if x == y:
+				states_for_strategy.append((n1 - x, n2 - y, t))
+			elif x > y:
+				states_for_strategy.append((n1 - x, n2 - y, t + 1))
+			else:
+				# x < y:
+				states_for_strategy.append((n1 - x, n2 - y, t - 1))
+		result_states.append(states_for_strategy)
+	return result_states
 
+
+def calculate_dist_and_utility(tab):
 	# Variables
 	variables = []
-	for i in range(len(Tab)):
-		variables.append(LpVariable("p"+str(i), 0, 1))
-	weights = Tab
+	for i in range(len(tab)):
+		variables.append(LpVariable("p" + str(i), 0, 1))
+	weights = tab
 
 	# Solving the problem from the vectors Variables and weights
-	prob = LpProblem("test1", LpMaximize)
+	linear_problem = LpProblem("test1", LpMaximize)
 
-	(Min,Max) = minMax(weights)
-	t = LpVariable("t",Min,Max)
-	
+	(Min, Max) = find_min_and_max(weights)
+	t = LpVariable("t", Min, Max)
+
 	# Objective
-	prob += t
+	linear_problem += t
 
 	# Constraints
 	for column in range(len(weights[0])):
 		utility = 0
 		for row in range(len(weights)):
-			utility += variables[row]*weights[row][column]
-		#print("UTILITY : ",utility)
-		prob += utility - t >= 0
+			utility += variables[row] * weights[row][column]
+		# print("UTILITY : ",utility)
+		linear_problem += utility - t >= 0
 
 	probabilities = 0
 	for variable in variables:
 		probabilities += variable
-	prob += probabilities == 1
+	linear_problem += probabilities == 1
 
-	if DEBUG:
-		GLPK().solve(prob)
-	else:
-		# don't produce any output, just solve the problem
-		prob.solve(GLPK_CMD(msg=False))
+	global DEBUG
+	# produce output only in DEBUG mode
+	linear_problem.solve(GLPK_CMD(msg=DEBUG))
 
-	P = []
+	distribution = []
 	# Solution
-	for v in prob.variables():
-		#print(v.name, "=", v.varValue)
+	for v in linear_problem.variables():
+		# print(v.name, "=", v.varValue)
 		if v.name != "t":
-			P.append(v.varValue)
+			distribution.append(v.varValue)
 
-	#print("objective=", value(prob.objective))
+	# print("objective=", value(linear_problem.objective))
 
-	return(P, value(prob.objective))
-
-
-def len1(x):
-	l = -1
-	for i in range(len(x)):
-		if x[i] == 1 and l > -1:
-			return -1
-	
-		elif x[i] == 1:
-			l = i
-			
-	return l
+	return distribution, value(linear_problem.objective)
 
 
-def G(x,y,t):
-
+# noinspection PyPep8Naming
+def G(x, y, t):
 	# First the initialization cases
 	if t == 0 and x == y:
 		return 0
-	elif t <= -(SIZE-1)/2:
+	elif t <= -(SIZE - 1) / 2:
 		return -1
-	elif t >= (SIZE-1)/2:
-		return 1    
-	elif x == 0: 
-		if t < 0: 
+	elif t >= (SIZE - 1) / 2:
+		return 1
+	elif x == 0:
+		if t < 0:
 			return -1
 		elif y == t:
 			return 0
@@ -184,10 +165,10 @@ def G(x,y,t):
 			return -1
 		else:
 			raise ValueError("Impossible case")
-	elif y == 0: 
+	elif y == 0:
 		if t > 0:
 			return 1
-		elif (x+t) == 0:
+		elif (x + t) == 0:
 			return 0
 		elif x > t:
 			return 1
@@ -197,105 +178,108 @@ def G(x,y,t):
 			raise ValueError("Impossible case")
 	else:
 
-		# It's not possible to get the utility from the state, so we use the function Solve() to get the utility and 
-		# the mixed stategy. 
+		# It's not possible to get the utility from the state, so we use the function Solve() to get the utility and
+		# the mixed strategy.
 
-		if (x,y,t) in SEEN :
-			return SEEN[(x,y,t)]
+		if (x, y, t) in SEEN:
+			return SEEN[(x, y, t)]
 
-
-		(_, g) = Solve(x,y,t)
+		(_, utility) = solve(x, y, t)
 
 		# We add the result of the computation in the dictionary SEEN in order to not compute it several times
-		SEEN[(x,y,t)] = g
+		SEEN[(x, y, t)] = utility
 
-		return g
-
-		# # Here is the reccurence
-		
-		# # We enumerate all the reachable states
-		# states = enumStatesfrom(x,y,t)
-		
-				
-		# #If there is only one issue for the player 1, the profits will be the argmin of all the issues from the player 2
-		# if x == 1: 
-		#     x,y,t = states[0][0]
-		#     mini = G(x,y,t)
-		#     for state in states[0]:
-		#         x,y,t = state
-		#         profits = G(x,y,t)
-		#         if  profits < mini:
-		#             mini = profits
-		#     return mini
-		
-		# # If there is more the one issue for the player 1 we try to reduce the number of issues by finding dominated ones
-		# p = []
-		# for x1 in range(len(states)):
-		#     p.append(0)
-		#     for y in range(len(states[0])):
-		#         for x2 in range(len(states)):
-		#             if x1 < x2 :
-		#                 p[x1] = 1        
-
-		
-		# if len1(p) > -1: 
-		#     x,y,t = states[len1(p)][0]
-		#     mini = G(x,y,t)
-		#     for state in states[len1(p)]:
-		#         x,y,t = state
-		#         profits = G(x,y,t)
-		#         if  profits < mini:
-		#             mini = profits
-		#     return mini
+		return utility
 
 
-def Solve(x,y,t):
+# # Here is the recurrence
 
+# # We enumerate all the reachable states
+# states = enum_states_from(x,y,t)
+
+# #If there is only one issue for the player 1, the profits will be the arg min of all the issues from the player 2
+# if x == 1:
+#     x,y,t = states[0][0]
+#     mini = G(x,y,t)
+#     for state in states[0]:
+#         x,y,t = state
+#         profits = G(x,y,t)
+#         if  profits < mini:
+#             mini = profits
+#     return mini
+
+# # If there is more the one issue for the player 1 we try to reduce the number of issues by finding dominated ones
+# p = []
+# for x1 in range(len(states)):
+#     p.append(0)
+#     for y in range(len(states[0])):
+#         for x2 in range(len(states)):
+#             if x1 < x2 :
+#                 p[x1] = 1
+
+# if len1(p) > -1:
+#     x,y,t = states[len1(p)][0]
+#     mini = G(x,y,t)
+#     for state in states[len1(p)]:
+#         x,y,t = state
+#         profits = G(x,y,t)
+#         if  profits < mini:
+#             mini = profits
+#     return mini
+
+
+def solve(x, y, t):
 	# We enumerate all the reachable states
-	states = enumStatesfrom(x,y,t)
+	states = enum_states_from(x, y, t)
 
-	#If there is only one issue for the player 1, the profits will be the argmin of all the issues from the player 2
-	if x == 1: 
-		x,y,t = states[0][0]
-		mini = G(x,y,t)
+	# If there is only one issue for the player 1, the profits will be the arg min of all the issues from the player 2
+	if x == 1:
+		x, y, t = states[0][0]
+		mini = G(x, y, t)
 		for state in states[0]:
-			x,y,t = state
-			profits = G(x,y,t)
-			if  profits < mini:
+			x, y, t = state
+			profits = G(x, y, t)
+			if profits < mini:
 				mini = profits
-		return ([1.0],mini)
+		return [1.0], mini
 
-	# We replce all the states by their utility
+	# We replace all the states by their utility
 	for row in states:
 		for i in range(len(row)):
-			(x,y,t) = row[i]
-			row[i] = G(x,y,t)
+			(x, y, t) = row[i]
+			row[i] = G(x, y, t)
 
-	# We delete all the dominated stategies
-#	L1 = getNotDominatedStategies(states)
-#
-#	for i in range(len(states)-1, -1, -1):
-#		if i not in L1:
-#			del states[i]
+	# We delete all the dominated strategies
+	not_dominated_strategy_indices = get_not_dominated_strategies(states)
+
+	for i in range(len(states) - 1, -1, -1):
+		if i not in not_dominated_strategy_indices:
+			del states[i]
+
+	return calculate_dist_and_utility(states)
 
 
-	return LinProg(states)
-
-#print(Solve(5,4,-1))
+# print(Solve(5,4,-1))
 
 
 if __name__ == "__main__":
 	if len(sys.argv) == 4:
-		start_time = time.time()
-		(p,g) = Solve(int(sys.argv[1]),int(sys.argv[2]),int(sys.argv[3]))
-		print("--- %s seconds ---" % (time.time() - start_time))
+		try:
+			start_time = time.time()
+			(p, g) = solve(int(sys.argv[1]), int(sys.argv[2]), int(sys.argv[3]))
+			print("--- %s seconds ---" % (time.time() - start_time))
 
-		p = np.array(p)
-		p /= p.sum()
-		print("Distribution:",list(p))
-		print("Utility: ",g)
-		X = np.random.choice(range(len(p)), 1, p = p)
-		print("You should shoot", X[0]+1, "rocks.")
-
+			p = np.array(p)
+			p /= p.sum()
+			print("Distribution:", list(p))
+			print("Utility: ", g)
+			X = np.random.choice(range(len(p)), 1, p=p)
+			print("You should shoot", X[0] + 1, "rocks.")
+		except ValueError:
+			for index in range(1, len(sys.argv)):
+				if not sys.argv[index].isdigit():
+					print("<", sys.argv[index], "> is not an integer")
+					print("Usage: Python3 Troll&Castles.py <x y t> where x,y,t are integers")
+					break
 	else:
-		print("Usage: Python3 Troll&Castles <x y t>")
+		print("Usage: Python3 Troll&Castles.py <x y t>")
