@@ -3,17 +3,18 @@ from pulp import *
 import time
 import numpy as np
 import logging
+import pickle
 
 # TIME : 1.74 seconds for (10,10,0)
-# TODO : Properly eliminate dominated strategies
-#         Try to implement a dynamic programming method in order to improve speed
+# TODO: Try to implement a dynamic programming method in order to improve speed
 
 
 # We define the distance between the two castles.
-SIZE = 7
+SIZE = 15
 
 # This object contains all the states already computed in order not to compute them several times
-SEEN = {}
+# SEEN = {}
+# distributions = {}
 
 DEBUG = False
 
@@ -34,14 +35,18 @@ def rem(tab, k):
 			return tab
 
 
+def triple_to_string(triple):
+	return str(triple[0]) + "," + str(triple[1]) + "," + str(triple[2])
+
+
 def eliminate_dominated_strategies(tab):
 	old_size = 0
 	tab = np.insert(tab, 0, range(1, tab.shape[0] + 1), axis=1)
 	tab = np.insert(tab, 0, range(0, tab.shape[1]), axis=0)
-	while tab.size is not old_size:
-		old_size = tab.size
-		tab = eliminate_strategies_in(tab).transpose()
-		tab = eliminate_strategies_in(tab, transposed=True).transpose()
+	# while tab.size is not old_size:
+	# 	old_size = tab.size
+	# 	tab = eliminate_strategies_in(tab).transpose()
+	# 	tab = eliminate_strategies_in(tab, transposed=True).transpose()
 	return tab
 
 
@@ -200,19 +205,31 @@ def G(x, y, t):
 		# It's not possible to get the utility from the state, so we use the function Solve() to get the utility and
 		# the mixed strategy.
 
+		with open("utilities.pkl", 'rb') as utilities_pickle:
+			SEEN = pickle.load(utilities_pickle)
+
 		if (x, y, t) in SEEN:
 			return SEEN[(x, y, t)]
 
 		(_, utility) = solve(x, y, t)
 
 		# We add the result of the computation in the dictionary SEEN in order to not compute it several times
-		SEEN[(x, y, t)] = utility
+		with open("utilities.pkl", 'wb') as output:
+			SEEN[(x, y, t)] = utility
+			pickle.dump(SEEN, output, pickle.HIGHEST_PROTOCOL)
 
 		return utility
 
 
 def solve(x, y, t):
 	# We enumerate all the reachable states
+	triple = (x, y, t)
+	with open("distributions.pkl", 'rb') as distributions_pickle:
+		distributions = pickle.load(distributions_pickle)
+
+	if triple in distributions:
+		return distributions[triple]
+
 	states = enum_states_from(x, y, t)
 
 	# If there is only one issue for the player 1, the profits will be the arg min of all the issues from the player 2
@@ -240,7 +257,14 @@ def solve(x, y, t):
 	# 	if i not in not_dominated_strategy_indices:
 	# 		del states[i]
 
-	return calculate_dist_and_utility(game)
+	dist = calculate_dist_and_utility(game)
+	# distributions[triple] = dist
+	with open("distributions.pkl", 'wb') as distributions_pickle:
+		distributions[triple] = dist
+		print("triple:", triple)
+		print("#dist:", len(distributions))
+		pickle.dump(distributions, distributions_pickle, pickle.HIGHEST_PROTOCOL)
+	return dist
 
 
 def represents_int(s):
