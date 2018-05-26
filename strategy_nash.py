@@ -10,11 +10,11 @@ import pickle
 
 
 # We define the distance between the two castles.
-SIZE = 15
+SIZE = 7
 
 # This object contains all the states already computed in order not to compute them several times
-# SEEN = {}
-# distributions = {}
+SEEN = {}
+distributions = {}
 
 DEBUG = False
 
@@ -205,18 +205,18 @@ def G(x, y, t):
 		# It's not possible to get the utility from the state, so we use the function Solve() to get the utility and
 		# the mixed strategy.
 
-		with open("utilities.pkl", 'rb') as utilities_pickle:
-			SEEN = pickle.load(utilities_pickle)
-
+		# with open("utilities.pkl", 'rb') as utilities_pickle:
+		# 	SEEN = pickle.load(utilities_pickle)
+		global SEEN
 		if (x, y, t) in SEEN:
 			return SEEN[(x, y, t)]
 
 		(_, utility) = solve(x, y, t)
 
 		# We add the result of the computation in the dictionary SEEN in order to not compute it several times
-		with open("utilities.pkl", 'wb') as output:
-			SEEN[(x, y, t)] = utility
-			pickle.dump(SEEN, output, pickle.HIGHEST_PROTOCOL)
+		# with open("utilities.pkl", 'wb') as output:
+		SEEN[(x, y, t)] = utility
+		# 	pickle.dump(SEEN, output, pickle.HIGHEST_PROTOCOL)
 
 		return utility
 
@@ -224,9 +224,10 @@ def G(x, y, t):
 def solve(x, y, t):
 	# We enumerate all the reachable states
 	triple = (x, y, t)
-	with open("distributions.pkl", 'rb') as distributions_pickle:
-		distributions = pickle.load(distributions_pickle)
+	# with open("distributions.pkl", 'rb') as distributions_pickle:
+	# 	distributions = pickle.load(distributions_pickle)
 
+	global distributions
 	if triple in distributions:
 		return distributions[triple]
 
@@ -259,11 +260,11 @@ def solve(x, y, t):
 
 	dist = calculate_dist_and_utility(game)
 	# distributions[triple] = dist
-	with open("distributions.pkl", 'wb') as distributions_pickle:
-		distributions[triple] = dist
-		print("triple:", triple)
-		print("#dist:", len(distributions))
-		pickle.dump(distributions, distributions_pickle, pickle.HIGHEST_PROTOCOL)
+	# with open("distributions.pkl", 'wb') as distributions_pickle:
+	distributions[triple] = dist
+	print("triple:", triple)
+	print("#dist:", len(distributions))
+	# pickle.dump(distributions, distributions_pickle, pickle.HIGHEST_PROTOCOL)
 	return dist
 
 
@@ -280,6 +281,7 @@ def represents_int(s):
 def calculate_what_to_play(left, right, position):
 	((distribution, distribution_ind), g) = solve(left, right, position)
 	if DEBUG:
+		start_time = time.time()
 		print("--- %s seconds ---" % (time.time() - start_time))
 
 	distribution = np.array(distribution)
@@ -291,24 +293,50 @@ def calculate_what_to_play(left, right, position):
 	return int(X[0])
 
 
-if __name__ == "__main__":
-	if len(sys.argv) == 4:
-		try:
-			start_time = time.time()
-			((distribution, distribution_ind), g) = solve(int(sys.argv[1]), int(sys.argv[2]), int(sys.argv[3]))
-			print("--- %s seconds ---" % (time.time() - start_time))
+def save_object(obj, filename):
+	with open(filename, 'wb') as output:  # overwrites any existing file.
+		pickle.dump(obj, output, pickle.HIGHEST_PROTOCOL)
 
-			distribution = np.array(distribution)
-			distribution /= distribution.sum()
-			print("Distribution:", list(distribution), distribution_ind)
-			print("Utility: ", g)
-			X = np.random.choice(distribution_ind, 1, p=distribution)
-			print("You should shoot", X[0], "rocks.")
-		except ValueError:
-			for index in range(1, len(sys.argv)):
-				if not represents_int(sys.argv[index]):
-					print("<", sys.argv[index], "> is not an integer")
-					print("Usage: Python3 strategy_nash.py <x y t> where x,y,t are integers")
-					break
-	else:
-		print("Usage: Python3 strategy_nash.py <x y t>")
+
+def load_object(filename):
+	with open(filename, 'rb') as input:
+		return pickle.load(input)
+
+
+def export_to_pickle():
+	save_object({}, "distributions.pkl")
+	save_object({}, "utilities.pkl")
+	global SEEN
+	global distributions
+	SEEN = load_object("utilities.pkl")
+	distributions = load_object("distributions.pkl")
+	for t in range(SIZE//2, -1 * SIZE//2 - 1, -1):
+		for x in range(1, 51):
+			for y in range(1, 51):
+				solve(x, y, t)
+	save_object(SEEN, "utilities.pkl")
+	save_object(distributions, "distributions.pkl")
+
+
+if __name__ == "__main__":
+	export_to_pickle()
+	# if len(sys.argv) == 4:
+	# 	try:
+	# 		start_time = time.time()
+	# 		((distribution, distribution_ind), g) = solve(int(sys.argv[1]), int(sys.argv[2]), int(sys.argv[3]))
+	# 		print("--- %s seconds ---" % (time.time() - start_time))
+	#
+	# 		distribution = np.array(distribution)
+	# 		distribution /= distribution.sum()
+	# 		print("Distribution:", list(distribution), distribution_ind)
+	# 		print("Utility: ", g)
+	# 		X = np.random.choice(distribution_ind, 1, p=distribution)
+	# 		print("You should shoot", X[0], "rocks.")
+	# 	except ValueError:
+	# 		for index in range(1, len(sys.argv)):
+	# 			if not represents_int(sys.argv[index]):
+	# 				print("<", sys.argv[index], "> is not an integer")
+	# 				print("Usage: Python3 strategy_nash.py <x y t> where x,y,t are integers")
+	# 				break
+	# else:
+	# 	print("Usage: Python3 strategy_nash.py <x y t>")
