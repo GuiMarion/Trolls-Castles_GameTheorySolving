@@ -224,7 +224,7 @@ def solve(x, y, t):
 			profits = G(x, y, t)
 			if profits < mini:
 				mini = profits
-		return [1.0], mini
+		return ([1.0], [1]), mini
 
 	# We replace all the states by their utility
 	for row in states:
@@ -253,6 +253,20 @@ def represents_int(s):
 
 # print(solve(5, 4, -1))
 
+def calculate_what_to_play(left, right, position):
+	((distribution, distribution_ind), g) = solve(left, right, position)
+	if DEBUG:
+		print("--- %s seconds ---" % (time.time() - start_time))
+
+	distribution = np.array(distribution)
+	distribution /= distribution.sum()
+	if DEBUG:
+		print("Distribution:", list(distribution), distribution_ind)
+		print("Utility: ", g)
+	X = np.random.choice(distribution_ind, 1, p=distribution)
+	return int(X[0])
+
+
 if __name__ == "__main__":
 	if len(sys.argv) == 4:
 		try:
@@ -270,7 +284,7 @@ if __name__ == "__main__":
 			for index in range(1, len(sys.argv)):
 				if not represents_int(sys.argv[index]):
 					print("<", sys.argv[index], "> is not an integer")
-					print("Usage: Python3 Troll&Castles.py <x y t> where x,y,t are integers")
+					print("Usage: Python3 strategy_nash.py <x y t> where x,y,t are integers")
 					break
 	else:
-		print("Usage: Python3 Troll&Castles.py <x y t>")
+		print("Usage: Python3 strategy_nash.py <x y t>")
