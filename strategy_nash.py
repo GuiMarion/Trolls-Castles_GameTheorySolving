@@ -282,6 +282,10 @@ def save_object(obj, filename):
 		pickle.dump(obj, output, pickle.HIGHEST_PROTOCOL)
 
 
+def load_dist(num):
+	return load_object("field" + str(num) + "/distributions.pkl")
+
+
 def load_object(filename):
 	with open(filename, 'rb') as input:
 		return pickle.load(input)

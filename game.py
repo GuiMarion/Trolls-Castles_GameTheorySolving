@@ -1,5 +1,5 @@
 import Troll
-import create_database as db
+import strategy_nash as db
 import numpy as np
 
 distributions = {}
