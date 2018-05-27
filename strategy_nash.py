@@ -246,6 +246,7 @@ def solve(x, y, t):
 			profits = G(x, y, t)
 			if profits < mini:
 				mini = profits
+		distributions[triple] = ([1.0], [1]), mini
 		return ([1.0], [1]), mini
 
 	# We replace all the states by their utility
@@ -308,20 +309,26 @@ def load_object(filename):
 
 
 def export_to_pickle():
-	save_object({}, "field" + str(SIZE) + "/distributions.pkl")
-	save_object({}, "field" + str(SIZE) + "/utilities.pkl")
+	# save_object({}, "field" + str(SIZE) + "/distributions.pkl")
+	# save_object({}, "field" + str(SIZE) + "/utilities.pkl")
 	global SEEN
 	global distributions
 	print("size:", SIZE)
 	SEEN = load_object("field" + str(SIZE) + "/utilities.pkl")
 	distributions = load_object("field" + str(SIZE) + "/distributions.pkl")
+	i = 0
+	progress = 0
+	old_progress = 0
+	total = len(range(SIZE // 2, -1 * SIZE // 2 - 1, -1)) * 50
+	x = 1
 	for t in range(SIZE // 2, -1 * SIZE // 2 - 1, -1):
-		for x in range(1, 51):
-			for y in range(1, x+1):
-				solve(x, y, t)
-		for x in range(1, 51):
-			for y in range(x+1, 51):
-				solve(x, y, t)
+		for y in range(1, 51):
+			solve(x, y, t)
+			i += 1
+			progress = i * 100 // total
+			if progress is not old_progress:
+				print(progress, "%")
+				old_progress = progress
 	save_object(SEEN, "field" + str(SIZE) + "/utilities.pkl")
 	save_object(distributions, "field" + str(SIZE) + "/distributions.pkl")
 

@@ -11,7 +11,7 @@ def strategy_demo(game, previous_parties):
 
 
 def strategy_of_nash(game, previous_parties):
-	troll_position = game.positionTroll - (game.nombreCases - 1) / 2
+	troll_position = int(game.positionTroll - (game.nombreCases - 1) // 2)
 	stones_left = game.stockGauche
 	stones_right = game.stockDroite
 	((distribution, distribution_ind), g) = distributions[stones_left, stones_right, troll_position]
