@@ -43,6 +43,9 @@ def eliminate_dominated_strategies(tab):
 	old_size = 0
 	tab = np.insert(tab, 0, range(1, tab.shape[0] + 1), axis=1)
 	tab = np.insert(tab, 0, range(0, tab.shape[1]), axis=0)
+	# while generating the pickles, the elimination took too long, so for better performance,
+	# it might be better to remove this altogether. Uncomment if you want to observe the elimination
+	# process e.g. with DEBUG
 	# while tab.size is not old_size:
 	# 	old_size = tab.size
 	# 	tab = eliminate_strategies_in(tab).transpose()
@@ -88,9 +91,7 @@ def eliminate_strategies_in(tab, transposed=False):
 				# Strategy is dominated by other_strategy_index
 				logger.debug("%s < %s", strategy_index, other_strategy_index)
 				logger.debug("\n%s", np.array(tab))
-				# result_list = rem(result_list, strategy_index)
 				to_remove.append(strategy_index)
-				# other_strategy_index = 0
 				break
 			if same:
 				break
@@ -126,6 +127,8 @@ def calculate_dist_and_utility(tab):
 	variables = []
 	distribution_indices = []
 	for i in range(1, len(tab)):
+		# zfill is necessary : linear_problem.variables() list variables in alphabetical order, so after p1 it's p10 and
+		# not p2. with zfill(4), we ensure the correct behaviour if there is less than 10000 variable
 		variables.append(LpVariable("p" + str(tab[i][0]).zfill(4), 0, 1))
 		distribution_indices.append(tab[i][0])
 	weights = tab
@@ -157,18 +160,12 @@ def calculate_dist_and_utility(tab):
 	# produce output only in DEBUG mode
 	linear_problem.solve(GLPK_CMD(msg=DEBUG))
 
-	# if DEBUG:
-	# print(linear_problem)
-	# print(linear_problem.variables())
-
 	distribution_list = []
 	# Solution
 	for v in linear_problem.variables():
 		# print(v.name, "=", v.varValue)
 		if v.name != "t":
 			distribution_list.append(v.varValue)
-
-	# print("objective=", value(linear_problem.objective))
 
 	return (distribution_list, distribution_indices), value(linear_problem.objective)
 
@@ -209,8 +206,6 @@ def G(x, y, t):
 		# It's not possible to get the utility from the state, so we use the function Solve() to get the utility and
 		# the mixed strategy.
 
-		# with open("utilities.pkl", 'rb') as utilities_pickle:
-		# 	SEEN = pickle.load(utilities_pickle)
 		global SEEN
 		if (x, y, t) in SEEN:
 			return SEEN[(x, y, t)]
@@ -218,9 +213,7 @@ def G(x, y, t):
 		(_, utility) = solve(x, y, t)
 
 		# We add the result of the computation in the dictionary SEEN in order to not compute it several times
-		# with open("utilities.pkl", 'wb') as output:
 		SEEN[(x, y, t)] = utility
-		# 	pickle.dump(SEEN, output, pickle.HIGHEST_PROTOCOL)
 
 		return utility
 
@@ -228,8 +221,6 @@ def G(x, y, t):
 def solve(x, y, t):
 	# We enumerate all the reachable states
 	triple = (x, y, t)
-	# with open("distributions.pkl", 'rb') as distributions_pickle:
-	# 	distributions = pickle.load(distributions_pickle)
 
 	global distributions
 	if triple in distributions:
@@ -256,20 +247,10 @@ def solve(x, y, t):
 			row[i] = G(x, y, t)
 
 	# We delete all the dominated strategies
-	# not_dominated_strategy_indices = get_not_dominated_strategies(states)
 	game = eliminate_dominated_strategies(np.array(states))
 
-	# for i in range(len(states) - 1, -1, -1):
-	# 	if i not in not_dominated_strategy_indices:
-	# 		del states[i]
-
 	dist = calculate_dist_and_utility(game)
-	# distributions[triple] = dist
-	# with open("distributions.pkl", 'wb') as distributions_pickle:
 	distributions[triple] = dist
-	# print("size: ", SIZE, ", triple:", triple)
-	# print("#dist:", len(distributions))
-	# pickle.dump(distributions, distributions_pickle, pickle.HIGHEST_PROTOCOL)
 	return dist
 
 
@@ -281,20 +262,18 @@ def represents_int(s):
 		return False
 
 
-# print(solve(5, 4, -1))
-
 def calculate_what_to_play(left, right, position):
-	((distribution, distribution_ind), g) = solve(left, right, position)
+	((dist, dist_ind), g) = solve(left, right, position)
 	if DEBUG:
-		start_time = time.time()
-		print("--- %s seconds ---" % (time.time() - start_time))
+		start = time.time()
+		print("--- %s seconds ---" % (time.time() - start))
 
-	distribution = np.array(distribution)
-	distribution /= distribution.sum()
+	dist = np.array(dist)
+	dist /= dist.sum()
 	if DEBUG:
-		print("Distribution:", list(distribution), distribution_ind)
+		print("Distribution:", list(dist), dist_ind)
 		print("Utility: ", g)
-	X = np.random.choice(distribution_ind, 1, p=distribution)
+	X = np.random.choice(dist_ind, 1, p=dist)
 	return int(X[0])
 
 
@@ -309,23 +288,22 @@ def load_object(filename):
 
 
 def export_to_pickle():
-	# save_object({}, "field" + str(SIZE) + "/distributions.pkl")
-	# save_object({}, "field" + str(SIZE) + "/utilities.pkl")
+	save_object({}, "field" + str(SIZE) + "/distributions.pkl")
+	save_object({}, "field" + str(SIZE) + "/utilities.pkl")
 	global SEEN
 	global distributions
 	print("size:", SIZE)
 	SEEN = load_object("field" + str(SIZE) + "/utilities.pkl")
 	distributions = load_object("field" + str(SIZE) + "/distributions.pkl")
-	i = 0
-	progress = 0
+	count = 0
 	old_progress = 0
 	total = len(range(SIZE // 2, -1 * SIZE // 2 - 1, -1)) * 50
 	x = 1
 	for t in range(SIZE // 2, -1 * SIZE // 2 - 1, -1):
 		for y in range(1, 51):
 			solve(x, y, t)
-			i += 1
-			progress = i * 100 // total
+			count += 1
+			progress = count * 100 // total
 			if progress is not old_progress:
 				print(progress, "%")
 				old_progress = progress
@@ -333,27 +311,33 @@ def export_to_pickle():
 	save_object(distributions, "field" + str(SIZE) + "/distributions.pkl")
 
 
-if __name__ == "__main__":
+def create_pickles():
+	global SIZE
 	for i in [7, 15]:
 		SIZE = i
 		export_to_pickle()
-# if len(sys.argv) == 4:
-# 	try:
-# 		start_time = time.time()
-# 		((distribution, distribution_ind), g) = solve(int(sys.argv[1]), int(sys.argv[2]), int(sys.argv[3]))
-# 		print("--- %s seconds ---" % (time.time() - start_time))
-#
-# 		distribution = np.array(distribution)
-# 		distribution /= distribution.sum()
-# 		print("Distribution:", list(distribution), distribution_ind)
-# 		print("Utility: ", g)
-# 		X = np.random.choice(distribution_ind, 1, p=distribution)
-# 		print("You should shoot", X[0], "rocks.")
-# 	except ValueError:
-# 		for index in range(1, len(sys.argv)):
-# 			if not represents_int(sys.argv[index]):
-# 				print("<", sys.argv[index], "> is not an integer")
-# 				print("Usage: Python3 strategy_nash.py <x y t> where x,y,t are integers")
-# 				break
-# else:
-# 	print("Usage: Python3 strategy_nash.py <x y t>")
+
+
+if __name__ == "__main__":
+	# uncomment to create pickles
+	# create_pickles()
+	if len(sys.argv) == 4:
+		try:
+			start_time = time.time()
+			((distribution, distribution_ind), g) = solve(int(sys.argv[1]), int(sys.argv[2]), int(sys.argv[3]))
+			print("--- %s seconds ---" % (time.time() - start_time))
+
+			distribution = np.array(distribution)
+			distribution /= distribution.sum()
+			print("Distribution:", list(distribution), distribution_ind)
+			print("Utility: ", g)
+			X = np.random.choice(distribution_ind, 1, p=distribution)
+			print("You should shoot", X[0], "rocks.")
+		except ValueError:
+			for index in range(1, len(sys.argv)):
+				if not represents_int(sys.argv[index]):
+					print("<", sys.argv[index], "> is not an integer")
+					print("Usage: Python3 strategy_nash.py <x y t> where x,y,t are integers")
+					break
+	else:
+		print("Usage: Python3 strategy_nash.py <x y t>")
