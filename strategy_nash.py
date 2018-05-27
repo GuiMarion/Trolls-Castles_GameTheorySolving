@@ -126,7 +126,7 @@ def calculate_dist_and_utility(tab):
 	variables = []
 	distribution_indices = []
 	for i in range(1, len(tab)):
-		variables.append(LpVariable("p" + str(tab[i][0]), 0, 1))
+		variables.append(LpVariable("p" + str(tab[i][0]).zfill(4), 0, 1))
 		distribution_indices.append(tab[i][0])
 	weights = tab
 
@@ -156,6 +156,10 @@ def calculate_dist_and_utility(tab):
 	global DEBUG
 	# produce output only in DEBUG mode
 	linear_problem.solve(GLPK_CMD(msg=DEBUG))
+
+	# if DEBUG:
+	# print(linear_problem)
+	# print(linear_problem.variables())
 
 	distribution_list = []
 	# Solution
@@ -262,8 +266,8 @@ def solve(x, y, t):
 	# distributions[triple] = dist
 	# with open("distributions.pkl", 'wb') as distributions_pickle:
 	distributions[triple] = dist
-	print("triple:", triple)
-	print("#dist:", len(distributions))
+	# print("size: ", SIZE, ", triple:", triple)
+	# print("#dist:", len(distributions))
 	# pickle.dump(distributions, distributions_pickle, pickle.HIGHEST_PROTOCOL)
 	return dist
 
@@ -304,39 +308,45 @@ def load_object(filename):
 
 
 def export_to_pickle():
-	save_object({}, "distributions.pkl")
-	save_object({}, "utilities.pkl")
+	save_object({}, "field" + str(SIZE) + "/distributions.pkl")
+	save_object({}, "field" + str(SIZE) + "/utilities.pkl")
 	global SEEN
 	global distributions
-	SEEN = load_object("utilities.pkl")
-	distributions = load_object("distributions.pkl")
-	for t in range(SIZE//2, -1 * SIZE//2 - 1, -1):
+	print("size:", SIZE)
+	SEEN = load_object("field" + str(SIZE) + "/utilities.pkl")
+	distributions = load_object("field" + str(SIZE) + "/distributions.pkl")
+	for t in range(SIZE // 2, -1 * SIZE // 2 - 1, -1):
 		for x in range(1, 51):
-			for y in range(1, 51):
+			for y in range(1, x+1):
 				solve(x, y, t)
-	save_object(SEEN, "utilities.pkl")
-	save_object(distributions, "distributions.pkl")
+		for x in range(1, 51):
+			for y in range(x+1, 51):
+				solve(x, y, t)
+	save_object(SEEN, "field" + str(SIZE) + "/utilities.pkl")
+	save_object(distributions, "field" + str(SIZE) + "/distributions.pkl")
 
 
 if __name__ == "__main__":
-	export_to_pickle()
-	# if len(sys.argv) == 4:
-	# 	try:
-	# 		start_time = time.time()
-	# 		((distribution, distribution_ind), g) = solve(int(sys.argv[1]), int(sys.argv[2]), int(sys.argv[3]))
-	# 		print("--- %s seconds ---" % (time.time() - start_time))
-	#
-	# 		distribution = np.array(distribution)
-	# 		distribution /= distribution.sum()
-	# 		print("Distribution:", list(distribution), distribution_ind)
-	# 		print("Utility: ", g)
-	# 		X = np.random.choice(distribution_ind, 1, p=distribution)
-	# 		print("You should shoot", X[0], "rocks.")
-	# 	except ValueError:
-	# 		for index in range(1, len(sys.argv)):
-	# 			if not represents_int(sys.argv[index]):
-	# 				print("<", sys.argv[index], "> is not an integer")
-	# 				print("Usage: Python3 strategy_nash.py <x y t> where x,y,t are integers")
-	# 				break
-	# else:
-	# 	print("Usage: Python3 strategy_nash.py <x y t>")
+	for i in [7, 15]:
+		SIZE = i
+		export_to_pickle()
+# if len(sys.argv) == 4:
+# 	try:
+# 		start_time = time.time()
+# 		((distribution, distribution_ind), g) = solve(int(sys.argv[1]), int(sys.argv[2]), int(sys.argv[3]))
+# 		print("--- %s seconds ---" % (time.time() - start_time))
+#
+# 		distribution = np.array(distribution)
+# 		distribution /= distribution.sum()
+# 		print("Distribution:", list(distribution), distribution_ind)
+# 		print("Utility: ", g)
+# 		X = np.random.choice(distribution_ind, 1, p=distribution)
+# 		print("You should shoot", X[0], "rocks.")
+# 	except ValueError:
+# 		for index in range(1, len(sys.argv)):
+# 			if not represents_int(sys.argv[index]):
+# 				print("<", sys.argv[index], "> is not an integer")
+# 				print("Usage: Python3 strategy_nash.py <x y t> where x,y,t are integers")
+# 				break
+# else:
+# 	print("Usage: Python3 strategy_nash.py <x y t>")
