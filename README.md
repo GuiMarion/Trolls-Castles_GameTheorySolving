@@ -4,6 +4,16 @@ This short project shows a way to find a good strategy to play the game Trolls&C
 
 ## How to use
 
+### Dependencies
+
+```shell
+pip install pulp
+pip install pylatex
+pip install numpy
+pip install tqdm
+apt install glpk-utils 
+```
+
 ### Download pickles
 
 If you don't want to generate the pickles, you can download them:
