@@ -304,7 +304,7 @@ def export_to_pickle():
 	SEEN = load_object("field" + str(SIZE) + "/utilities.pkl")
 	distributions = load_object("field" + str(SIZE) + "/distributions.pkl")
 	total = len(range(SIZE // 2, -1 * SIZE // 2 - 1, -1)) * 50 * 50
-	with tqdm(total=total) as progress:
+	with tqdm(total=total) as progress:  # type: tqdm
 		for t in range(SIZE // 2, -1 * SIZE // 2 - 1, -1):
 			for x in range(1, 51):
 				for y in range(1, x + 1):
