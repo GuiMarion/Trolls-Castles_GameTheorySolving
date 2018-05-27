@@ -5,13 +5,68 @@
 \usepackage{textcomp}%
 \usepackage{lastpage}%
 \usepackage[tmargin=1cm,lmargin=2cm]{geometry}%
+\usepackage[cache=false]{minted}
 %
 %
 %
 \begin{document}%
 \normalsize%
+\section{Strategies}
+
+\subsection{Random number of stones}
+
+\begin{minted}{python}
+def strategy_random(game, previous_parties):
+	number_of_stones_of_enemy = min(game.stockGauche, game.stockDroite + 1)
+	return int(np.random.choice(range(1, number_of_stones_of_enemy + 1)))
+\end{minted}
+
+\subsection{Always throw 2 stones}
+
+\begin{minted}{python}
+def strategy_always_throw_two(game, previous_parties):
+	number_of_stones = game.stockGauche
+	return min(2, number_of_stones)
+\end{minted}
+
+\subsection{Gaussian with location of 2 and variance of 0.5}
+
+\begin{minted}{python}
+def strategy_gaussian(game, previous_parties):
+	stones_to_throw = np.random.normal(2, 0.5)
+	if stones_to_throw > game.stockGauche:
+		stones_to_throw = min(np.random.normal(game.stockGauche//2, 3), game.stockGauche)
+	return int(max(stones_to_throw, 1))
+\end{minted}
+
+\subsection{Strategy leading to Nash equilibrium}
+
+Distributions have been calculated before and stored in pickles: \texttt{distributions} is an object loaded from a pickle. There is one for games with 7 field and another with 15 field. The tables of the utilities have also been calculated and stored in pickles, see \texttt{field7/utilities.pkl} and \texttt{field15/utilities.pkl}.
+
+\begin{minted}{python}
+def strategy_of_nash(game, previous_parties):
+	troll_position = int(game.positionTroll - (game.nombreCases - 1) // 2)
+	stones_left = game.stockGauche
+	stones_right = game.stockDroite
+	((distribution, distribution_ind), g) = distributions[stones_left, stones_right, troll_position]
+	distribution = np.array(distribution)
+	distribution /= distribution.sum()
+	X = np.random.choice(distribution_ind, 1, p=distribution)
+	return int(X[0])
+\end{minted}
+
+\subsection{Eager version of the strategy leading to Nash equilibrium}
+
+\begin{minted}{python}
+def strategy_nash_eager(game, previous_parties):
+	troll_position = int(game.positionTroll - (game.nombreCases - 1) // 2)
+	stones_left = game.stockGauche
+	stones_right = game.stockDroite
+	((distribution, distribution_ind), g) = distributions[stones_left, stones_right, troll_position]
+	return int(np.array(distribution).argmax() + 1)
+\end{minted}
+
 \section{Number of fields: 7, stones: 15}%
-\label{sec:Number of fields 7, stones 15}%
 \subsection{Strategy of nash VS random number of stones}%
 \label{subsec:Strategy of nash VS random number of stones}%
 {-}{-}{-}{-}{-} Resultats de la simulation {-}{-}{-}{-}{-}\newline%
