@@ -59,6 +59,8 @@ if __name__ == "__main__":
 			doc.append(Troll.jouerPlusieursParties(7, 15, strategy_of_nash, strategy_gaussian))
 		with doc.create(Subsection('Strategy of nash VS always throw two stones')):
 			doc.append(Troll.jouerPlusieursParties(7, 15, strategy_of_nash, strategy_always_throw_two))
+		with doc.create(Subsection('Nash equilibrium')):
+			doc.append(Troll.jouerPlusieursParties(7, 15, strategy_of_nash, strategy_of_nash))
 
 	with doc.create(Section('Number of fields: 7, stones: 30')):
 		with doc.create(Subsection('Strategy of nash VS random number of stones')):
@@ -69,6 +71,8 @@ if __name__ == "__main__":
 			doc.append(Troll.jouerPlusieursParties(7, 30, strategy_of_nash, strategy_gaussian))
 		with doc.create(Subsection('Strategy of nash VS always throw two stones')):
 			doc.append(Troll.jouerPlusieursParties(7, 30, strategy_of_nash, strategy_always_throw_two))
+		with doc.create(Subsection('Nash equilibrium')):
+			doc.append(Troll.jouerPlusieursParties(7, 30, strategy_of_nash, strategy_of_nash))
 
 	distributions = db.load_dist(15)
 	with doc.create(Section('Number of fields: 15, stones: 30')):
@@ -80,6 +84,8 @@ if __name__ == "__main__":
 			doc.append(Troll.jouerPlusieursParties(15, 30, strategy_of_nash, strategy_gaussian))
 		with doc.create(Subsection('Strategy of nash VS always throw two stones')):
 			doc.append(Troll.jouerPlusieursParties(15, 30, strategy_of_nash, strategy_always_throw_two))
+		with doc.create(Subsection('Nash equilibrium')):
+			doc.append(Troll.jouerPlusieursParties(15, 30, strategy_of_nash, strategy_of_nash))
 
 	with doc.create(Section('Number of fields: 15, stones: 50')):
 		with doc.create(Subsection('Strategy of nash VS random number of stones')):
@@ -90,5 +96,7 @@ if __name__ == "__main__":
 			doc.append(Troll.jouerPlusieursParties(15, 50, strategy_of_nash, strategy_gaussian))
 		with doc.create(Subsection('Strategy of nash VS always throw two stones')):
 			doc.append(Troll.jouerPlusieursParties(15, 50, strategy_of_nash, strategy_always_throw_two))
+		with doc.create(Subsection('Nash equilibrium')):
+			doc.append(Troll.jouerPlusieursParties(15, 50, strategy_of_nash, strategy_of_nash))
 
 	doc.generate_pdf('report/report', clean_tex=False)
