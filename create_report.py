@@ -2,21 +2,9 @@ import Troll
 import create_database as db
 import numpy as np
 
-from pylatex import Document, Section, Subsection, Tabular, Math, TikZ, Axis, \
-	Plot, Figure, Matrix, Alignat, Package
-from pylatex.utils import italic
-from pylatex.base_classes import Environment
-import os
+from pylatex import Document, Section, Subsection
 
 distributions = {}
-
-
-class Minted(Environment):
-	"""A class to wrap LaTeX's alltt environment."""
-
-	packages = [Package('minted')]
-	escape = False
-	content_separator = "\n"
 
 
 def strategy_always_throw_two(game, previous_parties):
@@ -58,80 +46,49 @@ def strategy_nash_eager(game, previous_parties):
 
 
 if __name__ == "__main__":
-	# party = Troll.Partie(7, 15)
-	# print(party)
-	distributions = db.load_dist(7)
-	# 7 - 15 single
-	# Troll.jouerPartie(7, 15, strategy_of_nash, strategy_demo)
-	# Troll.jouerPartie(7, 15, strategy_of_nash, strategy_random)
-	# Troll.jouerPartie(7, 15, strategy_of_nash, strategy_gaussian)
-	# Troll.jouerPlusieursParties(7, 15, strategy_of_nash, strategy_random)
-	# Troll.jouerPartie(7, 15, strategy_of_nash, strategy_demo)
-	# Troll.jouerPlusieursParties(7, 15, strategy_of_nash, strategy_always_throw_two)
-	# 	Troll.jouerPlusieursParties(7, 15, strategy_of_nash, strategy_gaussian)
-	# results = Troll.jouerPlusieursParties(7, 15, strategy_of_nash, strategy_nash_eager)
-	# print(results.gagnant)
-	# print(strategy_of_nash(party, None))
 	geometry_options = {"tmargin": "1cm", "lmargin": "2cm"}
 	doc = Document(geometry_options=geometry_options)
-	doc.packages.append(Package('minted'))
 
-	with doc.create(Section('Game type #1 - number of fields: 7')):
-		doc.append('Some regular text and some')
-		doc.append(italic('italic text. '))
-		doc.append('\nAlso some crazy characters: $&#{}')
+	distributions = db.load_dist(7)
+	with doc.create(Section('Number of fields: 7, stones: 15')):
 		with doc.create(Subsection('Strategy of nash VS random number of stones')):
 			doc.append(Troll.jouerPlusieursParties(7, 15, strategy_of_nash, strategy_random))
-		with doc.create(Minted()):
-			doc.append("""def strategy_random(game, previous_parties):
-	number_of_stones_of_enemy = min(game.stockGauche, game.stockDroite + 1)
-	return int(np.random.choice(range(1, number_of_stones_of_enemy + 1)))""")
+		with doc.create(Subsection('Strategy of nash VS eager version of strategy of nash')):
+			doc.append(Troll.jouerPlusieursParties(7, 15, strategy_of_nash, strategy_nash_eager))
+		with doc.create(Subsection('Strategy of nash VS gaussian with location of 2 and variance of 0.5')):
+			doc.append(Troll.jouerPlusieursParties(7, 15, strategy_of_nash, strategy_gaussian))
+		with doc.create(Subsection('Strategy of nash VS always throw two stones')):
+			doc.append(Troll.jouerPlusieursParties(7, 15, strategy_of_nash, strategy_always_throw_two))
 
-		with doc.create(Subsection('Strategy nash')):
-			with doc.create(Tabular('rc|cl')) as table:
-				table.add_hline()
-				table.add_row((1, 2, 3, 4))
-				table.add_hline(1, 2)
-				table.add_empty_row()
-				table.add_row((4, 5, 6, 7))
+	with doc.create(Section('Number of fields: 7, stones: 30')):
+		with doc.create(Subsection('Strategy of nash VS random number of stones')):
+			doc.append(Troll.jouerPlusieursParties(7, 30, strategy_of_nash, strategy_random))
+		with doc.create(Subsection('Strategy of nash VS eager version of strategy of nash')):
+			doc.append(Troll.jouerPlusieursParties(7, 30, strategy_of_nash, strategy_nash_eager))
+		with doc.create(Subsection('Strategy of nash VS gaussian with location of 2 and variance of 0.5')):
+			doc.append(Troll.jouerPlusieursParties(7, 30, strategy_of_nash, strategy_gaussian))
+		with doc.create(Subsection('Strategy of nash VS always throw two stones')):
+			doc.append(Troll.jouerPlusieursParties(7, 30, strategy_of_nash, strategy_always_throw_two))
 
-	a = np.array([[100, 10, 20]]).T
-	M = np.matrix([[2, 3, 4],
-								 [0, 0, 1],
-								 [0, 0, 2]])
+	distributions = db.load_dist(15)
+	with doc.create(Section('Number of fields: 15, stones: 30')):
+		with doc.create(Subsection('Strategy of nash VS random number of stones')):
+			doc.append(Troll.jouerPlusieursParties(15, 30, strategy_of_nash, strategy_random))
+		with doc.create(Subsection('Strategy of nash VS eager version of strategy of nash')):
+			doc.append(Troll.jouerPlusieursParties(15, 30, strategy_of_nash, strategy_nash_eager))
+		with doc.create(Subsection('Strategy of nash VS gaussian with location of 2 and variance of 0.5')):
+			doc.append(Troll.jouerPlusieursParties(15, 30, strategy_of_nash, strategy_gaussian))
+		with doc.create(Subsection('Strategy of nash VS always throw two stones')):
+			doc.append(Troll.jouerPlusieursParties(15, 30, strategy_of_nash, strategy_always_throw_two))
 
-	with doc.create(Section('Field 15')):
-		with doc.create(Subsection('Correct matrix equations')):
-			doc.append(Math(data=[Matrix(M), Matrix(a), '=', Matrix(M * a)]))
-
-		with doc.create(Subsection('Alignat math environment')):
-			with doc.create(Alignat(numbering=False, escape=False)) as agn:
-				agn.append(r'\frac{a}{b} &= 0 \\')
-				agn.extend([Matrix(M), Matrix(a), '&=', Matrix(M * a)])
-
-		with doc.create(Subsection('Beautiful graphs')):
-			with doc.create(TikZ()):
-				plot_options = 'height=4cm, width=6cm, grid=major'
-				with doc.create(Axis(options=plot_options)) as plot:
-					plot.append(Plot(name='model', func='-x^5 - 242'))
-
-					coordinates = [
-						(-4.77778, 2027.60977),
-						(-3.55556, 347.84069),
-						(-2.33333, 22.58953),
-						(-1.11111, -493.50066),
-						(0.11111, 46.66082),
-						(1.33333, -205.56286),
-						(2.55556, -341.40638),
-						(3.77778, -1169.24780),
-						(5.00000, -3269.56775),
-					]
-
-					plot.append(Plot(name='estimate', coordinates=coordinates))
-
-		with doc.create(Subsection('Cute kitten pictures')):
-			with doc.create(Figure(position='h!')) as kitten_pic:
-				# kitten_pic.add_image(image_filename, width='120px')
-				kitten_pic.add_caption('Look it\'s on its back')
+	with doc.create(Section('Number of fields: 15, stones: 50')):
+		with doc.create(Subsection('Strategy of nash VS random number of stones')):
+			doc.append(Troll.jouerPlusieursParties(15, 50, strategy_of_nash, strategy_random))
+		with doc.create(Subsection('Strategy of nash VS eager version of strategy of nash')):
+			doc.append(Troll.jouerPlusieursParties(15, 50, strategy_of_nash, strategy_nash_eager))
+		with doc.create(Subsection('Strategy of nash VS gaussian with location of 2 and variance of 0.5')):
+			doc.append(Troll.jouerPlusieursParties(15, 50, strategy_of_nash, strategy_gaussian))
+		with doc.create(Subsection('Strategy of nash VS always throw two stones')):
+			doc.append(Troll.jouerPlusieursParties(15, 50, strategy_of_nash, strategy_always_throw_two))
 
 	doc.generate_pdf('report/report', clean_tex=False)
