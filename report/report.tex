@@ -1,0 +1,389 @@
+\documentclass{article}%
+\usepackage[T1]{fontenc}%
+\usepackage[utf8]{inputenc}%
+\usepackage{lmodern}%
+\usepackage{textcomp}%
+\usepackage{lastpage}%
+\usepackage[tmargin=1cm,lmargin=2cm]{geometry}%
+%
+%
+%
+\begin{document}%
+\normalsize%
+\section{Number of fields: 7, stones: 15}%
+\label{sec:Number of fields 7, stones 15}%
+\subsection{Strategy of nash VS random number of stones}%
+\label{subsec:Strategy of nash VS random number of stones}%
+{-}{-}{-}{-}{-} Resultats de la simulation {-}{-}{-}{-}{-}\newline%
+		\newline%
+Matchs prevus : 1000\newline%
+Matchs joues : 1\newline%
+\newline%
+Victoires du joueur de gauche : 0\newline%
+Victoires du joueur de droite : 0\newline%
+Matchs nuls : 0\newline%
+\newline%
+Victoire du joueur de droite ! Le joueur de gauche a propose un coup invalide\newline%
+Une erreur est survenue dans la fonction du joueur de gauche : \newline%
+Traceback (most recent call last):\newline%
+  File "/home/kalnar/university/lyon1/m1.informatique/semester2/m1if26{-}Theorie\_des\_jeux\_{-}\_GAVIN\_GERALD/part\_1\_nash/Trolls{-}Castles\_GameTheorySolving/Troll.py", line 265, in jouerPartie\newline%
+    nombreGauche = strategie1(partieGauche, partiesPrecedentes)\newline%
+  File "/home/kalnar/university/lyon1/m1.informatique/semester2/m1if26{-}Theorie\_des\_jeux\_{-}\_GAVIN\_GERALD/part\_1\_nash/Trolls{-}Castles\_GameTheorySolving/create\_report.py", line 19, in strategy\_of\_nash\newline%
+    ((distribution, distribution\_ind), g) = distributions{[}stones\_left, stones\_right, troll\_position{]}\newline%
+KeyError: (15, 15, 0)\newline%
+
+%
+\subsection{Strategy of nash VS eager version of strategy of nash}%
+\label{subsec:Strategy of nash VS eager version of strategy of nash}%
+{-}{-}{-}{-}{-} Resultats de la simulation {-}{-}{-}{-}{-}\newline%
+		\newline%
+Matchs prevus : 1000\newline%
+Matchs joues : 1\newline%
+\newline%
+Victoires du joueur de gauche : 0\newline%
+Victoires du joueur de droite : 0\newline%
+Matchs nuls : 0\newline%
+\newline%
+Match nul ! Les deux joueurs ont propose un coup invalide\newline%
+Une erreur est survenue dans la fonction du joueur de gauche : \newline%
+Traceback (most recent call last):\newline%
+  File "/home/kalnar/university/lyon1/m1.informatique/semester2/m1if26{-}Theorie\_des\_jeux\_{-}\_GAVIN\_GERALD/part\_1\_nash/Trolls{-}Castles\_GameTheorySolving/Troll.py", line 265, in jouerPartie\newline%
+    nombreGauche = strategie1(partieGauche, partiesPrecedentes)\newline%
+  File "/home/kalnar/university/lyon1/m1.informatique/semester2/m1if26{-}Theorie\_des\_jeux\_{-}\_GAVIN\_GERALD/part\_1\_nash/Trolls{-}Castles\_GameTheorySolving/create\_report.py", line 19, in strategy\_of\_nash\newline%
+    ((distribution, distribution\_ind), g) = distributions{[}stones\_left, stones\_right, troll\_position{]}\newline%
+KeyError: (15, 15, 0)\newline%
+\newline%
+Une erreur est survenue dans la fonction du joueur de droite : \newline%
+Traceback (most recent call last):\newline%
+  File "/home/kalnar/university/lyon1/m1.informatique/semester2/m1if26{-}Theorie\_des\_jeux\_{-}\_GAVIN\_GERALD/part\_1\_nash/Trolls{-}Castles\_GameTheorySolving/Troll.py", line 272, in jouerPartie\newline%
+    nombreDroite = strategie2(partieDroite, partiesPrecedentesMiroir)\newline%
+  File "/home/kalnar/university/lyon1/m1.informatique/semester2/m1if26{-}Theorie\_des\_jeux\_{-}\_GAVIN\_GERALD/part\_1\_nash/Trolls{-}Castles\_GameTheorySolving/create\_report.py", line 44, in strategy\_nash\_eager\newline%
+    ((distribution, distribution\_ind), g) = distributions{[}stones\_left, stones\_right, troll\_position{]}\newline%
+KeyError: (15, 15, 0)\newline%
+
+%
+\subsection{Strategy of nash VS gaussian with location of 2 and variance of 0.5}%
+\label{subsec:Strategy of nash VS gaussian with location of 2 and variance of 0.5}%
+{-}{-}{-}{-}{-} Resultats de la simulation {-}{-}{-}{-}{-}\newline%
+		\newline%
+Matchs prevus : 1000\newline%
+Matchs joues : 1\newline%
+\newline%
+Victoires du joueur de gauche : 0\newline%
+Victoires du joueur de droite : 0\newline%
+Matchs nuls : 0\newline%
+\newline%
+Victoire du joueur de droite ! Le joueur de gauche a propose un coup invalide\newline%
+Une erreur est survenue dans la fonction du joueur de gauche : \newline%
+Traceback (most recent call last):\newline%
+  File "/home/kalnar/university/lyon1/m1.informatique/semester2/m1if26{-}Theorie\_des\_jeux\_{-}\_GAVIN\_GERALD/part\_1\_nash/Trolls{-}Castles\_GameTheorySolving/Troll.py", line 265, in jouerPartie\newline%
+    nombreGauche = strategie1(partieGauche, partiesPrecedentes)\newline%
+  File "/home/kalnar/university/lyon1/m1.informatique/semester2/m1if26{-}Theorie\_des\_jeux\_{-}\_GAVIN\_GERALD/part\_1\_nash/Trolls{-}Castles\_GameTheorySolving/create\_report.py", line 19, in strategy\_of\_nash\newline%
+    ((distribution, distribution\_ind), g) = distributions{[}stones\_left, stones\_right, troll\_position{]}\newline%
+KeyError: (15, 15, 0)\newline%
+
+%
+\subsection{Strategy of nash VS always throw two stones}%
+\label{subsec:Strategy of nash VS always throw two stones}%
+{-}{-}{-}{-}{-} Resultats de la simulation {-}{-}{-}{-}{-}\newline%
+		\newline%
+Matchs prevus : 1000\newline%
+Matchs joues : 1\newline%
+\newline%
+Victoires du joueur de gauche : 0\newline%
+Victoires du joueur de droite : 0\newline%
+Matchs nuls : 0\newline%
+\newline%
+Victoire du joueur de droite ! Le joueur de gauche a propose un coup invalide\newline%
+Une erreur est survenue dans la fonction du joueur de gauche : \newline%
+Traceback (most recent call last):\newline%
+  File "/home/kalnar/university/lyon1/m1.informatique/semester2/m1if26{-}Theorie\_des\_jeux\_{-}\_GAVIN\_GERALD/part\_1\_nash/Trolls{-}Castles\_GameTheorySolving/Troll.py", line 265, in jouerPartie\newline%
+    nombreGauche = strategie1(partieGauche, partiesPrecedentes)\newline%
+  File "/home/kalnar/university/lyon1/m1.informatique/semester2/m1if26{-}Theorie\_des\_jeux\_{-}\_GAVIN\_GERALD/part\_1\_nash/Trolls{-}Castles\_GameTheorySolving/create\_report.py", line 19, in strategy\_of\_nash\newline%
+    ((distribution, distribution\_ind), g) = distributions{[}stones\_left, stones\_right, troll\_position{]}\newline%
+KeyError: (15, 15, 0)\newline%
+
+%
+\section{Number of fields: 7, stones: 30}%
+\label{sec:Number of fields 7, stones 30}%
+\subsection{Strategy of nash VS random number of stones}%
+\label{subsec:Strategy of nash VS random number of stones}%
+{-}{-}{-}{-}{-} Resultats de la simulation {-}{-}{-}{-}{-}\newline%
+		\newline%
+Matchs prevus : 1000\newline%
+Matchs joues : 1\newline%
+\newline%
+Victoires du joueur de gauche : 0\newline%
+Victoires du joueur de droite : 0\newline%
+Matchs nuls : 0\newline%
+\newline%
+Victoire du joueur de droite ! Le joueur de gauche a propose un coup invalide\newline%
+Une erreur est survenue dans la fonction du joueur de gauche : \newline%
+Traceback (most recent call last):\newline%
+  File "/home/kalnar/university/lyon1/m1.informatique/semester2/m1if26{-}Theorie\_des\_jeux\_{-}\_GAVIN\_GERALD/part\_1\_nash/Trolls{-}Castles\_GameTheorySolving/Troll.py", line 265, in jouerPartie\newline%
+    nombreGauche = strategie1(partieGauche, partiesPrecedentes)\newline%
+  File "/home/kalnar/university/lyon1/m1.informatique/semester2/m1if26{-}Theorie\_des\_jeux\_{-}\_GAVIN\_GERALD/part\_1\_nash/Trolls{-}Castles\_GameTheorySolving/create\_report.py", line 19, in strategy\_of\_nash\newline%
+    ((distribution, distribution\_ind), g) = distributions{[}stones\_left, stones\_right, troll\_position{]}\newline%
+KeyError: (30, 30, 0)\newline%
+
+%
+\subsection{Strategy of nash VS eager version of strategy of nash}%
+\label{subsec:Strategy of nash VS eager version of strategy of nash}%
+{-}{-}{-}{-}{-} Resultats de la simulation {-}{-}{-}{-}{-}\newline%
+		\newline%
+Matchs prevus : 1000\newline%
+Matchs joues : 1\newline%
+\newline%
+Victoires du joueur de gauche : 0\newline%
+Victoires du joueur de droite : 0\newline%
+Matchs nuls : 0\newline%
+\newline%
+Match nul ! Les deux joueurs ont propose un coup invalide\newline%
+Une erreur est survenue dans la fonction du joueur de gauche : \newline%
+Traceback (most recent call last):\newline%
+  File "/home/kalnar/university/lyon1/m1.informatique/semester2/m1if26{-}Theorie\_des\_jeux\_{-}\_GAVIN\_GERALD/part\_1\_nash/Trolls{-}Castles\_GameTheorySolving/Troll.py", line 265, in jouerPartie\newline%
+    nombreGauche = strategie1(partieGauche, partiesPrecedentes)\newline%
+  File "/home/kalnar/university/lyon1/m1.informatique/semester2/m1if26{-}Theorie\_des\_jeux\_{-}\_GAVIN\_GERALD/part\_1\_nash/Trolls{-}Castles\_GameTheorySolving/create\_report.py", line 19, in strategy\_of\_nash\newline%
+    ((distribution, distribution\_ind), g) = distributions{[}stones\_left, stones\_right, troll\_position{]}\newline%
+KeyError: (30, 30, 0)\newline%
+\newline%
+Une erreur est survenue dans la fonction du joueur de droite : \newline%
+Traceback (most recent call last):\newline%
+  File "/home/kalnar/university/lyon1/m1.informatique/semester2/m1if26{-}Theorie\_des\_jeux\_{-}\_GAVIN\_GERALD/part\_1\_nash/Trolls{-}Castles\_GameTheorySolving/Troll.py", line 272, in jouerPartie\newline%
+    nombreDroite = strategie2(partieDroite, partiesPrecedentesMiroir)\newline%
+  File "/home/kalnar/university/lyon1/m1.informatique/semester2/m1if26{-}Theorie\_des\_jeux\_{-}\_GAVIN\_GERALD/part\_1\_nash/Trolls{-}Castles\_GameTheorySolving/create\_report.py", line 44, in strategy\_nash\_eager\newline%
+    ((distribution, distribution\_ind), g) = distributions{[}stones\_left, stones\_right, troll\_position{]}\newline%
+KeyError: (30, 30, 0)\newline%
+
+%
+\subsection{Strategy of nash VS gaussian with location of 2 and variance of 0.5}%
+\label{subsec:Strategy of nash VS gaussian with location of 2 and variance of 0.5}%
+{-}{-}{-}{-}{-} Resultats de la simulation {-}{-}{-}{-}{-}\newline%
+		\newline%
+Matchs prevus : 1000\newline%
+Matchs joues : 1\newline%
+\newline%
+Victoires du joueur de gauche : 0\newline%
+Victoires du joueur de droite : 0\newline%
+Matchs nuls : 0\newline%
+\newline%
+Victoire du joueur de droite ! Le joueur de gauche a propose un coup invalide\newline%
+Une erreur est survenue dans la fonction du joueur de gauche : \newline%
+Traceback (most recent call last):\newline%
+  File "/home/kalnar/university/lyon1/m1.informatique/semester2/m1if26{-}Theorie\_des\_jeux\_{-}\_GAVIN\_GERALD/part\_1\_nash/Trolls{-}Castles\_GameTheorySolving/Troll.py", line 265, in jouerPartie\newline%
+    nombreGauche = strategie1(partieGauche, partiesPrecedentes)\newline%
+  File "/home/kalnar/university/lyon1/m1.informatique/semester2/m1if26{-}Theorie\_des\_jeux\_{-}\_GAVIN\_GERALD/part\_1\_nash/Trolls{-}Castles\_GameTheorySolving/create\_report.py", line 19, in strategy\_of\_nash\newline%
+    ((distribution, distribution\_ind), g) = distributions{[}stones\_left, stones\_right, troll\_position{]}\newline%
+KeyError: (30, 30, 0)\newline%
+
+%
+\subsection{Strategy of nash VS always throw two stones}%
+\label{subsec:Strategy of nash VS always throw two stones}%
+{-}{-}{-}{-}{-} Resultats de la simulation {-}{-}{-}{-}{-}\newline%
+		\newline%
+Matchs prevus : 1000\newline%
+Matchs joues : 1\newline%
+\newline%
+Victoires du joueur de gauche : 0\newline%
+Victoires du joueur de droite : 0\newline%
+Matchs nuls : 0\newline%
+\newline%
+Victoire du joueur de droite ! Le joueur de gauche a propose un coup invalide\newline%
+Une erreur est survenue dans la fonction du joueur de gauche : \newline%
+Traceback (most recent call last):\newline%
+  File "/home/kalnar/university/lyon1/m1.informatique/semester2/m1if26{-}Theorie\_des\_jeux\_{-}\_GAVIN\_GERALD/part\_1\_nash/Trolls{-}Castles\_GameTheorySolving/Troll.py", line 265, in jouerPartie\newline%
+    nombreGauche = strategie1(partieGauche, partiesPrecedentes)\newline%
+  File "/home/kalnar/university/lyon1/m1.informatique/semester2/m1if26{-}Theorie\_des\_jeux\_{-}\_GAVIN\_GERALD/part\_1\_nash/Trolls{-}Castles\_GameTheorySolving/create\_report.py", line 19, in strategy\_of\_nash\newline%
+    ((distribution, distribution\_ind), g) = distributions{[}stones\_left, stones\_right, troll\_position{]}\newline%
+KeyError: (30, 30, 0)\newline%
+
+%
+\section{Number of fields: 15, stones: 30}%
+\label{sec:Number of fields 15, stones 30}%
+\subsection{Strategy of nash VS random number of stones}%
+\label{subsec:Strategy of nash VS random number of stones}%
+{-}{-}{-}{-}{-} Resultats de la simulation {-}{-}{-}{-}{-}\newline%
+		\newline%
+Matchs prevus : 1000\newline%
+Matchs joues : 1\newline%
+\newline%
+Victoires du joueur de gauche : 0\newline%
+Victoires du joueur de droite : 0\newline%
+Matchs nuls : 0\newline%
+\newline%
+Victoire du joueur de droite ! Le joueur de gauche a propose un coup invalide\newline%
+Une erreur est survenue dans la fonction du joueur de gauche : \newline%
+Traceback (most recent call last):\newline%
+  File "/home/kalnar/university/lyon1/m1.informatique/semester2/m1if26{-}Theorie\_des\_jeux\_{-}\_GAVIN\_GERALD/part\_1\_nash/Trolls{-}Castles\_GameTheorySolving/Troll.py", line 265, in jouerPartie\newline%
+    nombreGauche = strategie1(partieGauche, partiesPrecedentes)\newline%
+  File "/home/kalnar/university/lyon1/m1.informatique/semester2/m1if26{-}Theorie\_des\_jeux\_{-}\_GAVIN\_GERALD/part\_1\_nash/Trolls{-}Castles\_GameTheorySolving/create\_report.py", line 19, in strategy\_of\_nash\newline%
+    ((distribution, distribution\_ind), g) = distributions{[}stones\_left, stones\_right, troll\_position{]}\newline%
+KeyError: (30, 30, 0)\newline%
+
+%
+\subsection{Strategy of nash VS eager version of strategy of nash}%
+\label{subsec:Strategy of nash VS eager version of strategy of nash}%
+{-}{-}{-}{-}{-} Resultats de la simulation {-}{-}{-}{-}{-}\newline%
+		\newline%
+Matchs prevus : 1000\newline%
+Matchs joues : 1\newline%
+\newline%
+Victoires du joueur de gauche : 0\newline%
+Victoires du joueur de droite : 0\newline%
+Matchs nuls : 0\newline%
+\newline%
+Match nul ! Les deux joueurs ont propose un coup invalide\newline%
+Une erreur est survenue dans la fonction du joueur de gauche : \newline%
+Traceback (most recent call last):\newline%
+  File "/home/kalnar/university/lyon1/m1.informatique/semester2/m1if26{-}Theorie\_des\_jeux\_{-}\_GAVIN\_GERALD/part\_1\_nash/Trolls{-}Castles\_GameTheorySolving/Troll.py", line 265, in jouerPartie\newline%
+    nombreGauche = strategie1(partieGauche, partiesPrecedentes)\newline%
+  File "/home/kalnar/university/lyon1/m1.informatique/semester2/m1if26{-}Theorie\_des\_jeux\_{-}\_GAVIN\_GERALD/part\_1\_nash/Trolls{-}Castles\_GameTheorySolving/create\_report.py", line 19, in strategy\_of\_nash\newline%
+    ((distribution, distribution\_ind), g) = distributions{[}stones\_left, stones\_right, troll\_position{]}\newline%
+KeyError: (30, 30, 0)\newline%
+\newline%
+Une erreur est survenue dans la fonction du joueur de droite : \newline%
+Traceback (most recent call last):\newline%
+  File "/home/kalnar/university/lyon1/m1.informatique/semester2/m1if26{-}Theorie\_des\_jeux\_{-}\_GAVIN\_GERALD/part\_1\_nash/Trolls{-}Castles\_GameTheorySolving/Troll.py", line 272, in jouerPartie\newline%
+    nombreDroite = strategie2(partieDroite, partiesPrecedentesMiroir)\newline%
+  File "/home/kalnar/university/lyon1/m1.informatique/semester2/m1if26{-}Theorie\_des\_jeux\_{-}\_GAVIN\_GERALD/part\_1\_nash/Trolls{-}Castles\_GameTheorySolving/create\_report.py", line 44, in strategy\_nash\_eager\newline%
+    ((distribution, distribution\_ind), g) = distributions{[}stones\_left, stones\_right, troll\_position{]}\newline%
+KeyError: (30, 30, 0)\newline%
+
+%
+\subsection{Strategy of nash VS gaussian with location of 2 and variance of 0.5}%
+\label{subsec:Strategy of nash VS gaussian with location of 2 and variance of 0.5}%
+{-}{-}{-}{-}{-} Resultats de la simulation {-}{-}{-}{-}{-}\newline%
+		\newline%
+Matchs prevus : 1000\newline%
+Matchs joues : 1\newline%
+\newline%
+Victoires du joueur de gauche : 0\newline%
+Victoires du joueur de droite : 0\newline%
+Matchs nuls : 0\newline%
+\newline%
+Victoire du joueur de droite ! Le joueur de gauche a propose un coup invalide\newline%
+Une erreur est survenue dans la fonction du joueur de gauche : \newline%
+Traceback (most recent call last):\newline%
+  File "/home/kalnar/university/lyon1/m1.informatique/semester2/m1if26{-}Theorie\_des\_jeux\_{-}\_GAVIN\_GERALD/part\_1\_nash/Trolls{-}Castles\_GameTheorySolving/Troll.py", line 265, in jouerPartie\newline%
+    nombreGauche = strategie1(partieGauche, partiesPrecedentes)\newline%
+  File "/home/kalnar/university/lyon1/m1.informatique/semester2/m1if26{-}Theorie\_des\_jeux\_{-}\_GAVIN\_GERALD/part\_1\_nash/Trolls{-}Castles\_GameTheorySolving/create\_report.py", line 19, in strategy\_of\_nash\newline%
+    ((distribution, distribution\_ind), g) = distributions{[}stones\_left, stones\_right, troll\_position{]}\newline%
+KeyError: (30, 30, 0)\newline%
+
+%
+\subsection{Strategy of nash VS always throw two stones}%
+\label{subsec:Strategy of nash VS always throw two stones}%
+{-}{-}{-}{-}{-} Resultats de la simulation {-}{-}{-}{-}{-}\newline%
+		\newline%
+Matchs prevus : 1000\newline%
+Matchs joues : 1\newline%
+\newline%
+Victoires du joueur de gauche : 0\newline%
+Victoires du joueur de droite : 0\newline%
+Matchs nuls : 0\newline%
+\newline%
+Victoire du joueur de droite ! Le joueur de gauche a propose un coup invalide\newline%
+Une erreur est survenue dans la fonction du joueur de gauche : \newline%
+Traceback (most recent call last):\newline%
+  File "/home/kalnar/university/lyon1/m1.informatique/semester2/m1if26{-}Theorie\_des\_jeux\_{-}\_GAVIN\_GERALD/part\_1\_nash/Trolls{-}Castles\_GameTheorySolving/Troll.py", line 265, in jouerPartie\newline%
+    nombreGauche = strategie1(partieGauche, partiesPrecedentes)\newline%
+  File "/home/kalnar/university/lyon1/m1.informatique/semester2/m1if26{-}Theorie\_des\_jeux\_{-}\_GAVIN\_GERALD/part\_1\_nash/Trolls{-}Castles\_GameTheorySolving/create\_report.py", line 19, in strategy\_of\_nash\newline%
+    ((distribution, distribution\_ind), g) = distributions{[}stones\_left, stones\_right, troll\_position{]}\newline%
+KeyError: (30, 30, 0)\newline%
+
+%
+\section{Number of fields: 15, stones: 50}%
+\label{sec:Number of fields 15, stones 50}%
+\subsection{Strategy of nash VS random number of stones}%
+\label{subsec:Strategy of nash VS random number of stones}%
+{-}{-}{-}{-}{-} Resultats de la simulation {-}{-}{-}{-}{-}\newline%
+		\newline%
+Matchs prevus : 1000\newline%
+Matchs joues : 1\newline%
+\newline%
+Victoires du joueur de gauche : 0\newline%
+Victoires du joueur de droite : 0\newline%
+Matchs nuls : 0\newline%
+\newline%
+Victoire du joueur de droite ! Le joueur de gauche a propose un coup invalide\newline%
+Une erreur est survenue dans la fonction du joueur de gauche : \newline%
+Traceback (most recent call last):\newline%
+  File "/home/kalnar/university/lyon1/m1.informatique/semester2/m1if26{-}Theorie\_des\_jeux\_{-}\_GAVIN\_GERALD/part\_1\_nash/Trolls{-}Castles\_GameTheorySolving/Troll.py", line 265, in jouerPartie\newline%
+    nombreGauche = strategie1(partieGauche, partiesPrecedentes)\newline%
+  File "/home/kalnar/university/lyon1/m1.informatique/semester2/m1if26{-}Theorie\_des\_jeux\_{-}\_GAVIN\_GERALD/part\_1\_nash/Trolls{-}Castles\_GameTheorySolving/create\_report.py", line 19, in strategy\_of\_nash\newline%
+    ((distribution, distribution\_ind), g) = distributions{[}stones\_left, stones\_right, troll\_position{]}\newline%
+KeyError: (50, 50, 0)\newline%
+
+%
+\subsection{Strategy of nash VS eager version of strategy of nash}%
+\label{subsec:Strategy of nash VS eager version of strategy of nash}%
+{-}{-}{-}{-}{-} Resultats de la simulation {-}{-}{-}{-}{-}\newline%
+		\newline%
+Matchs prevus : 1000\newline%
+Matchs joues : 1\newline%
+\newline%
+Victoires du joueur de gauche : 0\newline%
+Victoires du joueur de droite : 0\newline%
+Matchs nuls : 0\newline%
+\newline%
+Match nul ! Les deux joueurs ont propose un coup invalide\newline%
+Une erreur est survenue dans la fonction du joueur de gauche : \newline%
+Traceback (most recent call last):\newline%
+  File "/home/kalnar/university/lyon1/m1.informatique/semester2/m1if26{-}Theorie\_des\_jeux\_{-}\_GAVIN\_GERALD/part\_1\_nash/Trolls{-}Castles\_GameTheorySolving/Troll.py", line 265, in jouerPartie\newline%
+    nombreGauche = strategie1(partieGauche, partiesPrecedentes)\newline%
+  File "/home/kalnar/university/lyon1/m1.informatique/semester2/m1if26{-}Theorie\_des\_jeux\_{-}\_GAVIN\_GERALD/part\_1\_nash/Trolls{-}Castles\_GameTheorySolving/create\_report.py", line 19, in strategy\_of\_nash\newline%
+    ((distribution, distribution\_ind), g) = distributions{[}stones\_left, stones\_right, troll\_position{]}\newline%
+KeyError: (50, 50, 0)\newline%
+\newline%
+Une erreur est survenue dans la fonction du joueur de droite : \newline%
+Traceback (most recent call last):\newline%
+  File "/home/kalnar/university/lyon1/m1.informatique/semester2/m1if26{-}Theorie\_des\_jeux\_{-}\_GAVIN\_GERALD/part\_1\_nash/Trolls{-}Castles\_GameTheorySolving/Troll.py", line 272, in jouerPartie\newline%
+    nombreDroite = strategie2(partieDroite, partiesPrecedentesMiroir)\newline%
+  File "/home/kalnar/university/lyon1/m1.informatique/semester2/m1if26{-}Theorie\_des\_jeux\_{-}\_GAVIN\_GERALD/part\_1\_nash/Trolls{-}Castles\_GameTheorySolving/create\_report.py", line 44, in strategy\_nash\_eager\newline%
+    ((distribution, distribution\_ind), g) = distributions{[}stones\_left, stones\_right, troll\_position{]}\newline%
+KeyError: (50, 50, 0)\newline%
+
+%
+\subsection{Strategy of nash VS gaussian with location of 2 and variance of 0.5}%
+\label{subsec:Strategy of nash VS gaussian with location of 2 and variance of 0.5}%
+{-}{-}{-}{-}{-} Resultats de la simulation {-}{-}{-}{-}{-}\newline%
+		\newline%
+Matchs prevus : 1000\newline%
+Matchs joues : 1\newline%
+\newline%
+Victoires du joueur de gauche : 0\newline%
+Victoires du joueur de droite : 0\newline%
+Matchs nuls : 0\newline%
+\newline%
+Victoire du joueur de droite ! Le joueur de gauche a propose un coup invalide\newline%
+Une erreur est survenue dans la fonction du joueur de gauche : \newline%
+Traceback (most recent call last):\newline%
+  File "/home/kalnar/university/lyon1/m1.informatique/semester2/m1if26{-}Theorie\_des\_jeux\_{-}\_GAVIN\_GERALD/part\_1\_nash/Trolls{-}Castles\_GameTheorySolving/Troll.py", line 265, in jouerPartie\newline%
+    nombreGauche = strategie1(partieGauche, partiesPrecedentes)\newline%
+  File "/home/kalnar/university/lyon1/m1.informatique/semester2/m1if26{-}Theorie\_des\_jeux\_{-}\_GAVIN\_GERALD/part\_1\_nash/Trolls{-}Castles\_GameTheorySolving/create\_report.py", line 19, in strategy\_of\_nash\newline%
+    ((distribution, distribution\_ind), g) = distributions{[}stones\_left, stones\_right, troll\_position{]}\newline%
+KeyError: (50, 50, 0)\newline%
+
+%
+\subsection{Strategy of nash VS always throw two stones}%
+\label{subsec:Strategy of nash VS always throw two stones}%
+{-}{-}{-}{-}{-} Resultats de la simulation {-}{-}{-}{-}{-}\newline%
+		\newline%
+Matchs prevus : 1000\newline%
+Matchs joues : 1\newline%
+\newline%
+Victoires du joueur de gauche : 0\newline%
+Victoires du joueur de droite : 0\newline%
+Matchs nuls : 0\newline%
+\newline%
+Victoire du joueur de droite ! Le joueur de gauche a propose un coup invalide\newline%
+Une erreur est survenue dans la fonction du joueur de gauche : \newline%
+Traceback (most recent call last):\newline%
+  File "/home/kalnar/university/lyon1/m1.informatique/semester2/m1if26{-}Theorie\_des\_jeux\_{-}\_GAVIN\_GERALD/part\_1\_nash/Trolls{-}Castles\_GameTheorySolving/Troll.py", line 265, in jouerPartie\newline%
+    nombreGauche = strategie1(partieGauche, partiesPrecedentes)\newline%
+  File "/home/kalnar/university/lyon1/m1.informatique/semester2/m1if26{-}Theorie\_des\_jeux\_{-}\_GAVIN\_GERALD/part\_1\_nash/Trolls{-}Castles\_GameTheorySolving/create\_report.py", line 19, in strategy\_of\_nash\newline%
+    ((distribution, distribution\_ind), g) = distributions{[}stones\_left, stones\_right, troll\_position{]}\newline%
+KeyError: (50, 50, 0)\newline%
+
+%
+\end{document}

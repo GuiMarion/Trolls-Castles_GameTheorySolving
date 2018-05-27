@@ -1,2 +1,6 @@
 *.pyg
 *.swp
+/report_with_strategies.aux
+/report_with_strategies.log
+/report_with_strategies.md
+/report_with_strategies.synctex.gz

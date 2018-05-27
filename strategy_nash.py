@@ -4,6 +4,8 @@ import time
 import numpy as np
 import logging
 import pickle
+from tqdm import tqdm
+from optparse import OptionParser
 
 # TIME : 1.74 seconds for (10,10,0)
 # TODO: Try to implement a dynamic programming method in order to improve speed
@@ -292,6 +294,8 @@ def load_object(filename):
 
 
 def export_to_pickle():
+	if not os.path.exists("field" + str(SIZE)):
+		os.makedirs("field" + str(SIZE))
 	save_object({}, "field" + str(SIZE) + "/distributions.pkl")
 	save_object({}, "field" + str(SIZE) + "/utilities.pkl")
 	global SEEN
@@ -299,36 +303,34 @@ def export_to_pickle():
 	print("size:", SIZE)
 	SEEN = load_object("field" + str(SIZE) + "/utilities.pkl")
 	distributions = load_object("field" + str(SIZE) + "/distributions.pkl")
-	count = 0
-	old_progress = 0
-	total = len(range(SIZE // 2, -1 * SIZE // 2 - 1, -1)) * 50
-	x = 1
-	for t in range(SIZE // 2, -1 * SIZE // 2 - 1, -1):
-		for y in range(1, 51):
-			solve(x, y, t)
-			count += 1
-			progress = count * 100 // total
-			if progress is not old_progress:
-				print(progress, "%")
-				old_progress = progress
+	total = len(range(SIZE // 2, -1 * SIZE // 2 - 1, -1)) * 50 * 50
+	with tqdm(total=total) as progress:
+		for t in range(SIZE // 2, -1 * SIZE // 2 - 1, -1):
+			for x in range(1, 51):
+				for y in range(1, x + 1):
+					solve(x, y, t)
+				progress.update(x)
+			for x in range(1, 51):
+				for y in range(x + 1, 51):
+					solve(x, y, t)
+				progress.update(50-x)
 	save_object(SEEN, "field" + str(SIZE) + "/utilities.pkl")
 	save_object(distributions, "field" + str(SIZE) + "/distributions.pkl")
 
 
-def create_pickles():
-	global SIZE
-	for i in [7, 15]:
-		SIZE = i
-		export_to_pickle()
-
-
 if __name__ == "__main__":
-	# uncomment to create pickles
-	# create_pickles()
-	if len(sys.argv) == 4:
+	parser = OptionParser()
+	parser.add_option("-s", "--size", dest="size", help="number of fields between the castles", metavar="SIZE")
+	parser.add_option("-p", "--pickle", action="store_true", dest="pickle", help="create pickles", metavar="PICKLE")
+	(options, args) = parser.parse_args()
+	if options.size is not None:
+		SIZE = int(options.size)
+	if options.pickle is not None:
+		export_to_pickle()
+	elif len(args) == 3:
 		try:
 			start_time = time.time()
-			((distribution, distribution_ind), g) = solve(int(sys.argv[1]), int(sys.argv[2]), int(sys.argv[3]))
+			((distribution, distribution_ind), g) = solve(int(args[0]), int(args[1]), int(args[2]))
 			print("--- %s seconds ---" % (time.time() - start_time))
 
 			distribution = np.array(distribution)
@@ -344,4 +346,4 @@ if __name__ == "__main__":
 					print("Usage: Python3 strategy_nash.py <x y t> where x,y,t are integers")
 					break
 	else:
-		print("Usage: Python3 strategy_nash.py <x y t>")
+		print("Usage: Python3 strategy_nash.py -s <size> <x y t>")
