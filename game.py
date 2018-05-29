@@ -46,15 +46,15 @@ def strategy_nash_eager(game, previous_parties):
 if __name__ == "__main__":
 	distributions = db.load_dist(7)
 	# 7 - 15 single
-	Troll.jouerPartie(7, 15, strategy_of_nash, strategy_random)
+	#Troll.jouerPartie(7, 15, strategy_of_nash, strategy_random)
 	# Troll.jouerPartie(7, 15, strategy_of_nash, strategy_gaussian)
 	# Troll.jouerPartie(7, 15, strategy_of_nash, strategy_nash_eager)
 	# Troll.jouerPartie(7, 15, strategy_of_nash, strategy_always_throw_two)
 	# # 7 - 15 multiple
-	# Troll.jouerPlusieursParties(7, 15, strategy_of_nash, strategy_random)
-	# Troll.jouerPlusieursParties(7, 15, strategy_of_nash, strategy_gaussian)
-	# Troll.jouerPlusieursParties(7, 15, strategy_of_nash, strategy_nash_eager)
-	# Troll.jouerPlusieursParties(7, 15, strategy_of_nash, strategy_always_throw_two)
+	Troll.jouerPlusieursParties(7, 15, strategy_of_nash, strategy_random)
+	Troll.jouerPlusieursParties(7, 15, strategy_of_nash, strategy_gaussian)
+	Troll.jouerPlusieursParties(7, 15, strategy_of_nash, strategy_nash_eager)
+	Troll.jouerPlusieursParties(7, 15, strategy_of_nash, strategy_always_throw_two)
 	# # 7 - 30 single
 	# Troll.jouerPartie(7, 30, strategy_of_nash, strategy_random)
 	# Troll.jouerPartie(7, 30, strategy_of_nash, strategy_gaussian)

@@ -40,18 +40,32 @@ def rem(tab, k):
 def triple_to_string(triple):
 	return str(triple[0]) + "," + str(triple[1]) + "," + str(triple[2])
 
+def insertNonNp(tab):
+	L = []
+	L.append(list(range(len(tab[0]) +1 )))
+	for i in range(len(tab)):
+		L.append([i+1])
+
+	for i in range(len(tab)):
+		for e in range(len(tab[i])):
+			L[i+1].append(tab[i][e])
+
+	return L
+
 
 def eliminate_dominated_strategies(tab):
 	old_size = 0
+	#tab = insertNonNp(tab)
 	tab = np.insert(tab, 0, range(1, tab.shape[0] + 1), axis=1)
 	tab = np.insert(tab, 0, range(0, tab.shape[1]), axis=0)
+
 	# while generating the pickles, the elimination took too long, so for better performance,
 	# it might be better to remove this altogether. Uncomment if you want to observe the elimination
 	# process e.g. with DEBUG
-	# while tab.size is not old_size:
-	# 	old_size = tab.size
-	# 	tab = eliminate_strategies_in(tab).transpose()
-	# 	tab = eliminate_strategies_in(tab, transposed=True).transpose()
+	while tab.size is not old_size:
+		old_size = tab.size
+		tab = eliminate_strategies_in(tab).transpose()
+		tab = eliminate_strategies_in(tab, transposed=True).transpose()
 	return tab
 
 
@@ -103,9 +117,16 @@ def eliminate_strategies_in(tab, transposed=False):
 	return np.delete(tab, to_remove, 0)
 
 
-def find_min_and_max(tab):
-	matrix = np.array(tab)
-	return matrix.min(), matrix.max()
+def find_min_and_max(Tab):
+	Min = Tab[0][0]
+	Max = Tab[0][0]
+	for liste in Tab:
+		for elem in liste:
+			if elem >Max :
+				Max = elem
+			elif elem < Min:
+				Min = elem 
+	return (Min,Max)
 
 
 def enum_states_from(n1, n2, t):
@@ -253,6 +274,7 @@ def solve(x, y, t):
 
 	dist = calculate_dist_and_utility(game)
 	distributions[triple] = dist
+	#print(triple)
 	return dist
 
 
@@ -304,16 +326,19 @@ def export_to_pickle():
 	SEEN = load_object("field" + str(SIZE) + "/utilities.pkl")
 	distributions = load_object("field" + str(SIZE) + "/distributions.pkl")
 	total = len(range(SIZE // 2, -1 * SIZE // 2 - 1, -1)) * 50 * 50
-	with tqdm(total=total) as progress:  # type: tqdm
-		for t in range(SIZE // 2, -1 * SIZE // 2 - 1, -1):
-			for x in range(1, 51):
-				for y in range(1, x + 1):
-					solve(x, y, t)
-				progress.update(x)
-			for x in range(1, 51):
-				for y in range(x + 1, 51):
-					solve(x, y, t)
-				progress.update(50-x)
+	# with tqdm(total=total) as progress:  # type: tqdm
+	# 	for t in range(SIZE // 2, -1 * SIZE // 2 - 1, -1):
+	# 		for x in range(1, 51):
+	# 			for y in range(1, x + 1):
+	# 				solve(x, y, t)
+	# 			progress.update(x)
+	# 		for x in range(1, 51):
+	# 			for y in range(x + 1, 51):
+	# 				solve(x, y, t)
+	# 			progress.update(50-x)
+
+	for i in range(20):
+		solve(i+1,i+1,0)
 	save_object(SEEN, "field" + str(SIZE) + "/utilities.pkl")
 	save_object(distributions, "field" + str(SIZE) + "/distributions.pkl")
 
@@ -339,6 +364,7 @@ if __name__ == "__main__":
 			print("Utility: ", g)
 			X = np.random.choice(distribution_ind, 1, p=distribution)
 			print("You should shoot", X[0], "rocks.")
+			#print(distributions[(15,15,0)])
 		except ValueError:
 			for index in range(1, len(sys.argv)):
 				if not represents_int(sys.argv[index]):
