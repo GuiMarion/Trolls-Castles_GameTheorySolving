@@ -19,6 +19,7 @@ SEEN = {}
 distributions = {}
 
 DEBUG = False
+TIME = 0
 
 # set up logger
 logger = logging.getLogger('root')
@@ -64,8 +65,11 @@ def eliminate_dominated_strategies(tab):
 	# process e.g. with DEBUG
 	while tab.size is not old_size:
 		old_size = tab.size
+		tabtemp = tab
 		tab = eliminate_strategies_in(tab).transpose()
 		tab = eliminate_strategies_in(tab, transposed=True).transpose()
+		if np.array_equal(tab,tabtemp):
+			return tab
 	return tab
 
 
@@ -270,7 +274,13 @@ def solve(x, y, t):
 			row[i] = G(x, y, t)
 
 	# We delete all the dominated strategies
+	#print("Begin")
+	T1 = time.clock()
 	game = eliminate_dominated_strategies(np.array(states))
+	#print("End")
+
+	global TIME 
+	TIME += (time.clock() - T1)
 
 	dist = calculate_dist_and_utility(game)
 	distributions[triple] = dist
@@ -337,10 +347,11 @@ def export_to_pickle():
 	# 				solve(x, y, t)
 	# 			progress.update(50-x)
 
-	for i in range(20):
+	for i in range(50):
 		solve(i+1,i+1,0)
-	save_object(SEEN, "field" + str(SIZE) + "/utilities.pkl")
-	save_object(distributions, "field" + str(SIZE) + "/distributions.pkl")
+		save_object(SEEN, "field" + str(SIZE) + "/utilities.pkl")
+		save_object(distributions, "field" + str(SIZE) + "/distributions.pkl")
+		print(i+1, " Done")
 
 
 if __name__ == "__main__":
@@ -358,6 +369,7 @@ if __name__ == "__main__":
 			((distribution, distribution_ind), g) = solve(int(args[0]), int(args[1]), int(args[2]))
 			print("--- %s seconds ---" % (time.time() - start_time))
 
+			print("Time for stratégies :", TIME)
 			distribution = np.array(distribution)
 			distribution /= distribution.sum()
 			print("Distribution:", list(distribution), distribution_ind)
