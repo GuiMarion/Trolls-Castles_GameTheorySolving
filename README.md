@@ -19,12 +19,12 @@ apt install glpk-utils
 If you don't want to generate the pickles, you can download them:
 
 ```shell
-mkdir -p field{7,15}
+mkdir -p field{7..21..2}
 
-wget -P field7 http://kalnar.eu/assets/game-theory/field7/distributions.pkl 
-wget -P field7 http://kalnar.eu/assets/game-theory/field7/utilities.pkl 
-wget -P field15 http://kalnar.eu/assets/game-theory/field15/distributions.pkl 
-wget -P field15 http://kalnar.eu/assets/game-theory/field15/utilities.pkl 
+for i in {7..21..2}: do
+  wget -P field${i} http://kalnar.eu/assets/game-theory/field${i}/distributions.pkl 
+  wget -P field${i} http://kalnar.eu/assets/game-theory/field${i}/utilities.pkl 
+done
 ```
 
 ### Running strategy_nash.py
