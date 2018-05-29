@@ -362,7 +362,9 @@ if __name__ == "__main__":
 	if options.size is not None:
 		SIZE = int(options.size)
 	if options.pickle is not None:
+		start_time = time.time()
 		export_to_pickle()
+		print("--- %s seconds ---" % (time.time() - start_time))
 	elif len(args) == 3:
 		try:
 			start_time = time.time()
