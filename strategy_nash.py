@@ -41,22 +41,9 @@ def rem(tab, k):
 def triple_to_string(triple):
 	return str(triple[0]) + "," + str(triple[1]) + "," + str(triple[2])
 
-def insertNonNp(tab):
-	L = []
-	L.append(list(range(len(tab[0]) +1 )))
-	for i in range(len(tab)):
-		L.append([i+1])
-
-	for i in range(len(tab)):
-		for e in range(len(tab[i])):
-			L[i+1].append(tab[i][e])
-
-	return L
-
 
 def eliminate_dominated_strategies(tab):
 	old_size = 0
-	#tab = insertNonNp(tab)
 	tab = np.insert(tab, 0, range(1, tab.shape[0] + 1), axis=1)
 	tab = np.insert(tab, 0, range(0, tab.shape[1]), axis=0)
 
