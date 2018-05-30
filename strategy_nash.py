@@ -47,15 +47,12 @@ def eliminate_dominated_strategies(tab):
 	tab = np.insert(tab, 0, range(1, tab.shape[0] + 1), axis=1)
 	tab = np.insert(tab, 0, range(0, tab.shape[1]), axis=0)
 
-	# while generating the pickles, the elimination took too long, so for better performance,
-	# it might be better to remove this altogether. Uncomment if you want to observe the elimination
-	# process e.g. with DEBUG
 	while tab.size is not old_size:
 		old_size = tab.size
-		tabtemp = tab
+		tab_before_elimination = tab
 		tab = eliminate_strategies_in(tab).transpose()
 		tab = eliminate_strategies_in(tab, transposed=True).transpose()
-		if np.array_equal(tab,tabtemp):
+		if np.array_equal(tab, tab_before_elimination):
 			return tab
 	return tab
 
