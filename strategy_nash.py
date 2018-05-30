@@ -121,16 +121,16 @@ def eliminate_strategies_in(tab, transposed=False):
 	return np.delete(tab, to_remove, 0)
 
 
-def find_min_and_max(Tab):
-	Min = Tab[0][0]
-	Max = Tab[0][0]
-	for liste in Tab:
-		for elem in liste:
-			if elem >Max :
-				Max = elem
-			elif elem < Min:
-				Min = elem 
-	return (Min,Max)
+def find_min_and_max(matrix):
+	min_of_matrix = matrix[0][0]
+	max_of_matrix = matrix[0][0]
+	for row in matrix:
+		for element in row:
+			if element > max_of_matrix:
+				max_of_matrix = element
+			elif element < min_of_matrix:
+				min_of_matrix = element
+	return min_of_matrix, max_of_matrix
 
 
 def enum_states_from(n1, n2, t):
