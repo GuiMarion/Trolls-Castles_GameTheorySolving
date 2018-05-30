@@ -274,17 +274,14 @@ def solve(x, y, t):
 			row[i] = G(x, y, t)
 
 	# We delete all the dominated strategies
-	#print("Begin")
-	T1 = time.clock()
+	start_strategy_elimination = time.clock()
 	game = eliminate_dominated_strategies(np.array(states))
-	#print("End")
 
-	global TIME 
-	TIME += (time.clock() - T1)
+	global TIME
+	TIME += (time.clock() - start_strategy_elimination)
 
 	dist = calculate_dist_and_utility(game)
 	distributions[triple] = dist
-	#print(triple)
 	return dist
 
 
