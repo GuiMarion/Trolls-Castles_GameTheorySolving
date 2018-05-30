@@ -159,7 +159,6 @@ def calculate_dist_and_utility(tab):
 		for row in range(1, len(weights)):
 			logger.debug("\ntab: \n%s, row: %s, column: %s, variables: %s", weights, row, column, variables)
 			utility += variables[row - 1] * weights[row][column]
-		# print("UTILITY : ",utility)
 		linear_problem += utility - t >= 0
 
 	probabilities = 0
@@ -174,7 +173,6 @@ def calculate_dist_and_utility(tab):
 	distribution_list = []
 	# Solution
 	for v in linear_problem.variables():
-		# print(v.name, "=", v.varValue)
 		if v.name != "t":
 			distribution_list.append(v.varValue)
 
