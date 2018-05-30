@@ -333,25 +333,13 @@ def export_to_pickle():
 	global SEEN
 	global distributions
 	print("size:", SIZE)
-	SEEN = load_object("field" + str(SIZE) + "/utilities.pkl")
-	distributions = load_object("field" + str(SIZE) + "/distributions.pkl")
-	total = len(range(SIZE // 2, -1 * SIZE // 2 - 1, -1)) * 50 * 50
-	# with tqdm(total=total) as progress:  # type: tqdm
-	# 	for t in range(SIZE // 2, -1 * SIZE // 2 - 1, -1):
-	# 		for x in range(1, 51):
-	# 			for y in range(1, x + 1):
-	# 				solve(x, y, t)
-	# 			progress.update(x)
-	# 		for x in range(1, 51):
-	# 			for y in range(x + 1, 51):
-	# 				solve(x, y, t)
-	# 			progress.update(50-x)
 
-	for i in range(50):
-		solve(i+1,i+1,0)
-		save_object(SEEN, "field" + str(SIZE) + "/utilities.pkl")
-		save_object(distributions, "field" + str(SIZE) + "/distributions.pkl")
-		print(i+1, " Done")
+	with tqdm(total=50) as progress:  # type: tqdm
+		for i in range(50):
+			solve(i + 1, i + 1, 0)
+			progress.update(1)
+	save_object(SEEN, "field" + str(SIZE) + "/utilities.pkl")
+	save_object(distributions, "field" + str(SIZE) + "/distributions.pkl")
 
 
 if __name__ == "__main__":
@@ -378,7 +366,7 @@ if __name__ == "__main__":
 			print("Utility: ", g)
 			X = np.random.choice(distribution_ind, 1, p=distribution)
 			print("You should shoot", X[0], "rocks.")
-			#print(distributions[(15,15,0)])
+		# print(distributions[(15,15,0)])
 		except ValueError:
 			for index in range(1, len(sys.argv)):
 				if not represents_int(sys.argv[index]):
