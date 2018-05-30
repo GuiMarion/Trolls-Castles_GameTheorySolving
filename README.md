@@ -1,5 +1,10 @@
 # Trolls-Castles_GameTheorySolving
-This short project shows a way to find a good strategy to play the game Trolls&Castels using GameTheory and linear programming.
+This short project shows a way to find a good strategy to play the game
+Trolls&Castels using GameTheory and linear programming.
+
+## Report
+
+A short report about the strategies and simulation can be found [here](https://github.com/GuiMarion/Trolls-Castles_GameTheorySolving/blob/master/report/report_with_strategies.pdf). 
 
 
 ## How to use
@@ -14,14 +19,17 @@ pip install tqdm
 apt install glpk-utils 
 ```
 
-### Download pickles
+### Pickles
 
-If you don't want to generate the pickles, you can download them:
+Strategies can be calculated in advance and saved in pickles. Pickles for
+distance ``7`` and ``15`` are included. You can generate others or if you don't
+want to, you can download pickles for distances: ``9,11,13,17,19,21``:
 
 ```shell
-mkdir -p field{7..21..2}
+mkdir -p field{9..13..2}
+mkdir -p field{17..21..2}
 
-for i in {7..21..2}: do
+for i in {9..13..2} {17..21..2}: do
   wget -P field${i} http://kalnar.eu/assets/game-theory/field${i}/distributions.pkl 
   wget -P field${i} http://kalnar.eu/assets/game-theory/field${i}/utilities.pkl 
 done
@@ -77,3 +85,13 @@ python3 strategy_nash.py -s 15 -p
 ```
 
 will create the pickles for the size 15.
+
+
+### game.py
+
+In ``game.py`` there are some simulations commented. To run a simulation,
+uncomment the desired situation in the ``main``. Furthermore, for exterior use
+cases, import the file and use the functions ``get_strategy_nash(int)`` and
+``get_strategy_nash_eager(int)`` as this is done in ``create_report.py``.
+
+
