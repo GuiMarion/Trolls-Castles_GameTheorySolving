@@ -10,11 +10,20 @@ def strategy_always_throw_two(game, previous_parties):
 	return min(2, number_of_stones)
 
 
+def get_strategy_nash(distance):
+	global distributions
+	distributions = db.load_dist(distance)
+	return strategy_of_nash
+
+
 def strategy_of_nash(game, previous_parties):
 	troll_position = int(game.positionTroll - (game.nombreCases - 1) // 2)
 	stones_left = game.stockGauche
 	stones_right = game.stockDroite
-	((distribution, distribution_ind), g) = distributions[stones_left, stones_right, troll_position]
+	if (stones_left, stones_right, troll_position) in distributions:
+		((distribution, distribution_ind), g) = distributions[stones_left, stones_right, troll_position]
+	else:
+		((distribution, distribution_ind), g) = db.calculate_what_to_play(stones_left, stones_right, troll_position)
 	distribution = np.array(distribution)
 	distribution /= distribution.sum()
 	X = np.random.choice(distribution_ind, 1, p=distribution)
@@ -34,29 +43,37 @@ def strategy_gaussian(game, previous_parties):
 	return int(max(stones_to_throw, 1))
 
 
-# wins 25% of the time against 'nash'-one and 50% tie
+def get_strategy_nash_eager(distance):
+	global distributions
+	distributions = db.load_dist(distance)
+	return strategy_nash_eager
+
+
 def strategy_nash_eager(game, previous_parties):
 	troll_position = int(game.positionTroll - (game.nombreCases - 1) // 2)
 	stones_left = game.stockGauche
 	stones_right = game.stockDroite
-	((distribution, distribution_ind), g) = distributions[stones_left, stones_right, troll_position]
+	if (stones_left, stones_right, troll_position) in distributions:
+		((distribution, distribution_ind), g) = distributions[stones_left, stones_right, troll_position]
+	else:
+		((distribution, distribution_ind), g) = db.calculate_what_to_play(stones_left, stones_right, troll_position)
 	return int(np.array(distribution).argmax() + 1)
 
 
 if __name__ == "__main__":
 	distributions = db.load_dist(7)
 	# 7 - 15 single
-	# Troll.jouerPartie(7, 15, strategy_of_nash, strategy_random)
-	# Troll.jouerPartie(7, 15, strategy_of_nash, strategy_gaussian)
-	# Troll.jouerPartie(7, 15, strategy_of_nash, strategy_nash_eager)
-	# Troll.jouerPartie(7, 15, strategy_of_nash, strategy_always_throw_two)
-	# Troll.jouerPartie(7, 15, strategy_of_nash, strategy_of_nash)
+	Troll.jouerPartie(7, 15, strategy_of_nash, strategy_random)
+	Troll.jouerPartie(7, 15, strategy_of_nash, strategy_gaussian)
+	Troll.jouerPartie(7, 15, strategy_of_nash, strategy_nash_eager)
+	Troll.jouerPartie(7, 15, strategy_of_nash, strategy_always_throw_two)
+	Troll.jouerPartie(7, 15, strategy_of_nash, strategy_of_nash)
 	# # 7 - 15 multiple
-	Troll.jouerPlusieursParties(7, 15, strategy_of_nash, strategy_random)
-	Troll.jouerPlusieursParties(7, 15, strategy_of_nash, strategy_gaussian)
-	Troll.jouerPlusieursParties(7, 15, strategy_of_nash, strategy_nash_eager)
-	Troll.jouerPlusieursParties(7, 15, strategy_of_nash, strategy_always_throw_two)
-	Troll.jouerPlusieursParties(7, 15, strategy_of_nash, strategy_of_nash)
+	# Troll.jouerPlusieursParties(7, 15, strategy_of_nash, strategy_random)
+	# Troll.jouerPlusieursParties(7, 15, strategy_of_nash, strategy_gaussian)
+	# Troll.jouerPlusieursParties(7, 15, strategy_of_nash, strategy_nash_eager)
+	# Troll.jouerPlusieursParties(7, 15, strategy_of_nash, strategy_always_throw_two)
+	# Troll.jouerPlusieursParties(7, 15, strategy_of_nash, strategy_of_nash)
 	# # 7 - 30 single
 	# Troll.jouerPartie(7, 30, strategy_of_nash, strategy_random)
 	# Troll.jouerPartie(7, 30, strategy_of_nash, strategy_gaussian)
