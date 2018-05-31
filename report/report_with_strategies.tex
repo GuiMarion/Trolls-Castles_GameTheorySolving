@@ -54,10 +54,10 @@ def strategy_of_nash(game, previous_parties):
 	stones_right = game.stockDroite
 	if (stones_left, stones_right, troll_position) in distributions:
 		((distribution, distribution_ind), g) = distributions[
-																						stones_left, stones_right, troll_position]
+					stones_left, stones_right, troll_position]
 	else:
 		((distribution, distribution_ind), g) = db.calculate_what_to_play(
-																						stones_left, stones_right, troll_position)
+					stones_left, stones_right, troll_position)
 	distribution = np.array(distribution)
 	distribution /= distribution.sum()
 	X = np.random.choice(distribution_ind, 1, p=distribution)
