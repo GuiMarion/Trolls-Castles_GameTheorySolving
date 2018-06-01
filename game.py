@@ -3,6 +3,7 @@ import strategy_nash as db
 import numpy as np
 
 distributions = {}
+SIZE = None
 
 
 def strategy_always_throw_two(game, previous_parties):
@@ -23,7 +24,9 @@ def strategy_of_nash(game, previous_parties):
 	if (stones_left, stones_right, troll_position) in distributions:
 		((distribution, distribution_ind), g) = distributions[stones_left, stones_right, troll_position]
 	else:
-		return db.calculate_what_to_play(stones_left, stones_right, troll_position)
+		print((stones_left, stones_right, troll_position))
+		raise ValueError("Your pickle is lacking some distributions")
+		#return db.calculate_what_to_play(stones_left, stones_right, troll_position)
 	distribution = np.array(distribution)
 	distribution /= distribution.sum()
 	X = np.random.choice(distribution_ind, 1, p=distribution)
@@ -87,7 +90,7 @@ if __name__ == "__main__":
 	# Troll.jouerPlusieursParties(7, 30, strategy_of_nash, strategy_always_throw_two)
 	# Troll.jouerPlusieursParties(7, 30, strategy_of_nash, strategy_of_nash)
 	# # load strategy of game with 15 fields
-	# distributions = db.load_dist(15)
+	distributions = db.load_dist(15)
 	# # 15 - 30 single
 	# Troll.jouerPartie(15, 30, strategy_of_nash, strategy_random)
 	# Troll.jouerPartie(15, 30, strategy_of_nash, strategy_gaussian)
@@ -98,7 +101,7 @@ if __name__ == "__main__":
 	# Troll.jouerPlusieursParties(15, 30, strategy_of_nash, strategy_random)
 	# Troll.jouerPlusieursParties(15, 30, strategy_of_nash, strategy_gaussian)
 	# Troll.jouerPlusieursParties(15, 30, strategy_of_nash, strategy_nash_eager)
-	Troll.jouerPlusieursParties(15, 30, strategy_of_nash, strategy_always_throw_two)
+	# Troll.jouerPlusieursParties(15, 30, strategy_of_nash, strategy_always_throw_two)
 	# Troll.jouerPlusieursParties(15, 30, strategy_of_nash, strategy_of_nash)
 	# # 15 - 50 single
 	# Troll.jouerPartie(15, 50, strategy_of_nash, strategy_random)

@@ -50,8 +50,8 @@ def eliminate_dominated_strategies(tab):
 	while tab.size is not old_size:
 		old_size = tab.size
 		tab_before_elimination = tab
-		tab = eliminate_strategies_in(tab).transpose()
-		tab = eliminate_strategies_in(tab, transposed=True).transpose()
+		#tab = eliminate_strategies_in(tab).transpose()
+		#tab = eliminate_strategies_in(tab, transposed=True).transpose()
 		if np.array_equal(tab, tab_before_elimination):
 			return tab
 	return tab

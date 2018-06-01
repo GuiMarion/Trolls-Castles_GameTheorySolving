@@ -1,8 +1,7 @@
-
+/report/
 *.xml
 .idea/
 /__pycache__/
-game.py
 /troll_api.pdf
 *.bck
 field*/

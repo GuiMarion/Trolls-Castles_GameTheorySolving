@@ -56,4 +56,4 @@ if __name__ == "__main__":
 		with doc.create(Subsection('Nash equilibrium')):
 			doc.append(Troll.jouerPlusieursParties(15, 50, game.get_strategy_nash(15), game.get_strategy_nash(15)))
 
-	doc.generate_pdf('report/report', clean_tex=False)
+	doc.generate_pdf('report', clean_tex=False)

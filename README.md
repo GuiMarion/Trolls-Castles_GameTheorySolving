@@ -4,7 +4,7 @@ Trolls&Castels using GameTheory and linear programming.
 
 ## Report
 
-A short report about the strategies and simulation can be found [here](https://github.com/GuiMarion/Trolls-Castles_GameTheorySolving/blob/master/report/report_with_strategies.pdf). 
+A short report about the strategies and simulation can be found [here](https://github.com/GuiMarion/Trolls-Castles_GameTheorySolving/blob/master/Report.pdf). 
 
 
 ## How to use
@@ -21,13 +21,26 @@ apt install glpk-utils
 
 ### Pickles
 
-Strategies can be calculated in advance and saved in pickles. Pickles for
-distance ``7`` and ``15`` are included. You can generate others or if you don't
-want to, you can download pickles for distances: ``9,11,13,17,19,21``by using : 
-
-		./getPickles.sh
+Strategies can be calculated in advance and saved in pickles. You can find in the directory pickles for Size 7 and 15.
 
 ### Running strategy_nash.py
+
+This program can be used for several things : compute the distribution for a given state represented by the number of rock of each player, the position of the troll and the distance between the two castles. Or fill a pickle with all the distributions that can be used for fast simulations.
+
+To compute a single distribution : 
+
+```shell
+Usage: Python3 strategy_nash.py -s <size> x y t
+```
+
+With x the number of rock for the player 1 and y the number of rock for the player 2 and t the position of the troll (0 is the middle), and size the distance between the two castles,by default size = 7.
+
+
+To generate pickles use the -p option.
+
+```shel
+python3 strategy_nash.py -s -p
+```
 
 ```shell
 python3 strategy_nash.py -h
@@ -43,41 +56,13 @@ Options:
   -p PICKLE, --pickle=PICKLE    create pickles
 ```
 
+### Create Report
 
-to generate pickles:
+You can make simulations and see the results in a Tex file very easily with 
 
-```shel
-python3 strategy_nash.py -p
-```
+		python3 create_report.py
 
-to calculate the distribution for a single step in the game:
-
-```shell
-python3 strategy_nash.py 15 14 -1
-```
-
-this will calculate the distribution of stones to throw for the state
-``(15,14,-1)``, which means that player one has 15 stones, player two has 14
-stones and the troll is one step closer to player one than to player two.
-
-If you want to change to size i.e. the distance between the castles, use
-the flag ``-s --size``, e.g.:
-
-```shell
-python3 strategy_nash.py -s 15 15 14 -1
-```
-
-calculates the same thing as before, but the distance between the castles is
-now 15.
-
-You can use this for creating pickles as well, e.g.
-
-```shell
-python3 strategy_nash.py -s 15 -p
-```
-
-will create the pickles for the size 15.
-
+This will use the pickles in the directory to make fast simulations against several other strategies.
 
 ### game.py
 
