@@ -47,13 +47,13 @@ def eliminate_dominated_strategies(tab):
 	tab = np.insert(tab, 0, range(1, tab.shape[0] + 1), axis=1)
 	tab = np.insert(tab, 0, range(0, tab.shape[1]), axis=0)
 
-	while tab.size is not old_size:
-		old_size = tab.size
-		tab_before_elimination = tab
-		tab = eliminate_strategies_in(tab).transpose()
-		tab = eliminate_strategies_in(tab, transposed=True).transpose()
-		if np.array_equal(tab, tab_before_elimination):
-			return tab
+	# while tab.size is not old_size:
+	# 	old_size = tab.size
+	# 	tab_before_elimination = tab
+	# 	tab = eliminate_strategies_in(tab).transpose()
+	# 	tab = eliminate_strategies_in(tab, transposed=True).transpose()
+	# 	if np.array_equal(tab, tab_before_elimination):
+	# 		return tab
 	return tab
 
 

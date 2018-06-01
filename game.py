@@ -23,7 +23,7 @@ def strategy_of_nash(game, previous_parties):
 	if (stones_left, stones_right, troll_position) in distributions:
 		((distribution, distribution_ind), g) = distributions[stones_left, stones_right, troll_position]
 	else:
-		return db.calculate_what_to_play(stones_left, stones_right, troll_position)
+		return db.calculate_what_to_play(stones_left, stones_right, troll_position, SIZE)
 	distribution = np.array(distribution)
 	distribution /= distribution.sum()
 	X = np.random.choice(distribution_ind, 1, p=distribution)
@@ -60,8 +60,10 @@ def strategy_nash_eager(game, previous_parties):
 	return int(np.array(distribution).argmax() + 1)
 
 
+SIZE = 15
+
 if __name__ == "__main__":
-	distributions = db.load_dist(7)
+	distributions = db.load_dist(SIZE)
 	# 7 - 15 single
 	# Troll.jouerPartie(7, 15, strategy_of_nash, strategy_random)
 	# Troll.jouerPartie(7, 15, strategy_of_nash, strategy_gaussian)
