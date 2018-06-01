@@ -17,6 +17,17 @@
 \normalsize%
 \section{Strategies}
 
+This project shows a way to compute efficient strategies for the Troll and Castle game using game theory and linear programming. The idea is to formlize each of the round with game theory and find the strategies that maximize the worth case using leanar programming. 
+
+The way of doing actually minimize the loss but don't try to maximize the gain. That's why we choose to implement the elimination of dominated strategies. We claim that this way of doing is capable of maximise the gain in the case of a game against a \textit{good player}. Be a \textit{good player} means be able to play the strategies that is the best for you in terme of mathematical expectation. 
+
+Therefore, this way of deciding is the best in term of expectation, in other terms, the strategies computed are the best in convergence, because of the Law of Large numbers. Due to the definition of convergence, we cannot ensure for a finite number of games that our strategy will be better then an other one. That's why some strategies can win the one we compute on 1000 repetitions. 
+
+To try to win faster in some cases we can try to guess the strategy of the other player in term of conditional probabilities (i.e. the probability of playing a strategy depending of the current state). Then, we can compute of distribution in the strategies that maximise the gain and the gain in the worth case. The idea is that allow to win faster and surely with a greather gain in the case that we have a good guess of the strategy of the other player and that he wont change it during the game. 
+For that, we can use Machine Learning (Markov Chains of order $n$, Neural Networks, ...) to learn the distribution while we are playing the prudent strategy, and when the guessed distribution is convenging very well use it to choose what to play knowing it. This part is not implemented and can also be very risky because of all the unknown parameters of the system (the player can change strategy, can also use Machine Learning to find a better strategy then us, convergence time can be very long on certain strategies, ...). 
+
+You can find here simulations we made with other strategies. 
+
 \subsection{Random number of stones}
 
 \begin{minted}{python}

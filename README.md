@@ -23,17 +23,9 @@ apt install glpk-utils
 
 Strategies can be calculated in advance and saved in pickles. Pickles for
 distance ``7`` and ``15`` are included. You can generate others or if you don't
-want to, you can download pickles for distances: ``9,11,13,17,19,21``:
+want to, you can download pickles for distances: ``9,11,13,17,19,21``by using : 
 
-```shell
-mkdir -p field{9..13..2}
-mkdir -p field{17..21..2}
-
-for i in {9..13..2} {17..21..2}: do
-  wget -P field${i} http://kalnar.eu/assets/game-theory/field${i}/distributions.pkl 
-  wget -P field${i} http://kalnar.eu/assets/game-theory/field${i}/utilities.pkl 
-done
-```
+		./getPickles.sh
 
 ### Running strategy_nash.py
 
